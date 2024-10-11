@@ -7,7 +7,7 @@ import "@fontsource/outfit";
 import "@fontsource/roboto";
 
 createRoot(document.getElementById("root")).render(
-  <StrictMode>
+  // <StrictMode>
     <App />
-  </StrictMode>
+  // </StrictMode>
 );
