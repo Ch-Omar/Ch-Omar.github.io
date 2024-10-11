@@ -9,4 +9,19 @@ export default defineConfig({
       localsConvention: "camelCase",
     },
   },
+  esbuild: {
+    loader: 'jsx',
+  },
+  resolve: {
+    alias: {
+      './runtimeConfig': './runtimeConfig.browser',
+    },
+  },
+  optimizeDeps: {
+    esbuildOptions: {
+      loader: {
+        '.js': 'jsx',
+      },
+    },
+  },
 });
