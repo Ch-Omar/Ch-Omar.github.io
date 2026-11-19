@@ -36,7 +36,7 @@ footer { color: var(--muted); font-size: 14px; margin-top: 32px; }
 <div class="wrap">
   <nav><a class="home" href="/">Portfolio</a><a href="/#contact">Contact</a></nav>
   <h1>Games</h1>
-  <p class="lead">Puzzle prototypes I am testing for my next mobile game. Each one has up to 10 levels. Play a few on your phone, then tell me which one you would keep playing.</p>
+  <p class="lead">Puzzle prototypes I am testing for my next mobile game. Each one has up to 10 levels. Play a few on your phone, and rate each one from 0 to 10 (the ★ button in every game) so I know which one to build for real.</p>
   <div class="grid">
     <a class="card" href="./noodle/" data-id="noodle" style="--c:#ffd54a">
       <span class="num">01</span>
@@ -159,7 +159,7 @@ footer { color: var(--muted); font-size: 14px; margin-top: 32px; }
       <span class="prog" data-prog="stroke">Not played yet</span>
     </a>
   </div>
-  <footer>Your progress is saved on this device. To improve the games, each level you play is also counted anonymously (game, level, time, win or lose), with no name, account or contact details.</footer>
+  <footer>Your progress is saved on this device. To improve the games, each level you play is also counted anonymously (game, level, time, win or lose, and your 0 to 10 rating), with no name, account or contact details.</footer>
 </div>
 <script>
 document.querySelectorAll('[data-prog]').forEach(el => {
@@ -170,6 +170,8 @@ document.querySelectorAll('[data-prog]').forEach(el => {
     else { const d = JSON.parse(localStorage.getItem('games.' + id)); if (d && d.stars) { done = Object.keys(d.stars).length; stars = Object.values(d.stars).reduce((a, b) => a + b, 0); } }
     if (done) { el.textContent = done + ' / ' + total + ' levels · ' + stars + ' ★'; el.classList.add('on'); }
     else el.textContent = total + ' levels';
+    const r = localStorage.getItem('games.rating.' + id);
+    if (r !== null) el.textContent += ' · you rated it ' + r + '/10';
   } catch (e) {}
 });
 </script>

@@ -53,6 +53,7 @@ tr.pick:hover td, tr.on td { background: rgba(87,108,188,.18); }
   <div class="card msg" id="gate">Loading…</div>
   <div id="dash" hidden>
     <div class="tiles" id="tiles"></div>
+    <div class="card" style="margin-top:20px"><h2>Ratings (0 to 10)</h2><div class="scroll"><table id="ratings"></table></div><p class="small">One rating per player and game; a player who rates again replaces their rating. Not filtered by the time range.</p></div>
     <div class="card" style="margin-top:20px"><h2>Per game</h2><div class="scroll"><table id="games"></table></div><p class="small">Tap a game to see its levels. "Quit" means the player left a level after 3 seconds or more without finishing it.</p></div>
     <div class="card" style="margin-top:20px"><h2 id="lvTitle">Levels</h2><div class="scroll"><table id="levels"></table></div></div>
     <div class="card" style="margin-top:20px"><h2>Latest plays</h2><div class="scroll"><table id="recent"></table></div></div>
@@ -76,7 +77,7 @@ if (!cfg || !cfg.apiKey) {
 } else {
   const [{ initializeApp }, A, F] = await Promise.all([import(SDK + 'firebase-app.js'), import(SDK + 'firebase-auth.js'), import(SDK + 'firebase-firestore.js')]);
   const app = initializeApp(cfg), auth = A.getAuth(app), db = F.getFirestore(app);
-  let rows = [], pick = null;
+  let rows = [], rates = [], pick = null;
   $('out').addEventListener('click', () => A.signOut(auth));
   $('reload').addEventListener('click', () => load());
   $('range').addEventListener('change', () => render());
@@ -96,6 +97,7 @@ if (!cfg || !cfg.apiKey) {
     try {
       const snap = await F.getDocs(F.query(F.collection(db, 'plays'), F.orderBy('ts', 'desc'), F.limit(10000)));
       rows = snap.docs.map(d => { const v = d.data(); return { ...v, t: v.ts ? v.ts.toMillis() : Date.now() }; });
+      try { rates = (await F.getDocs(F.collection(db, 'ratings'))).docs.map(d => d.data()); } catch (e) { rates = []; }
       $('gate').hidden = true; $('dash').hidden = false; render();
     } catch (e) {
       gate(`The database refused to show the stats (${esc(e.code || e.message)}).<br><br>Your user id is <code>${esc(user.uid)}</code>. Put it in the Firestore rules (where it says ADMIN_UID) and in <code>GAMES_ADMIN_UID</code> in firebase-config.js.`);
@@ -111,6 +113,15 @@ if (!cfg || !cfg.apiKey) {
       [players.size, 'Players'], [today, 'Players today'], [R.length, 'Level attempts'], [wins.length, 'Levels won'],
       [pct(wins.length, R.length) + '%', 'Success rate'], [fmtTime(secs), 'Time played'], [players.size ? fmtTime(secs / players.size) : '0s', 'Time per player'],
     ].map(([v, l]) => `<div class="tile"><b>${v}</b><span>${l}</span></div>`).join('');
+    const rated = Object.keys(NAMES).map(id => {
+      const rs = rates.filter(r => r.game === id).map(r => r.score), n = rs.length;
+      const dist = Array.from({ length: 11 }, (_, s) => rs.filter(v => v === s).length);
+      return { id, n, avg: n ? rs.reduce((a, b) => a + b, 0) / n : -1, dist, fans: rs.filter(v => v >= 8).length };
+    }).sort((a, b) => b.avg - a.avg || b.n - a.n);
+    const maxD = Math.max(1, ...rated.flatMap(r => r.dist));
+    $('ratings').innerHTML = `<thead><tr><th>#</th><th>Game</th><th>Average</th><th>Ratings</th><th>8 or more</th><th>0 … 10</th></tr></thead><tbody>` +
+      rated.map((r, k) => `<tr><td>${r.n ? k + 1 : '–'}</td><td style="text-align:left">${NAMES[r.id]}</td><td><b style="font-size:18px;color:${r.avg >= 7 ? 'var(--good)' : r.avg >= 5 ? 'var(--warn)' : r.avg >= 0 ? 'var(--bad)' : 'var(--muted)'}">${r.n ? r.avg.toFixed(1) : '–'}</b></td><td>${r.n}</td><td>${r.n ? pct(r.fans, r.n) + '%' : '–'}</td>
+        <td><span style="display:inline-flex;gap:2px;align-items:flex-end;height:26px">${r.dist.map((d, s) => `<i title="${s}/10: ${d}" style="display:block;width:7px;height:${2 + (d / maxD) * 24}px;border-radius:2px;background:hsl(${s * 12},70%,52%);opacity:${d ? 1 : 0.25}"></i>`).join('')}</span></td></tr>`).join('') + '</tbody>';
     const games = Object.keys(NAMES).map(id => {
       const g = R.filter(r => r.game === id), gp = new Set(g.map(r => r.pid)), gw = g.filter(r => r.result === 'win');
       const reached = {}; gw.forEach(r => { reached[r.pid] = Math.max(reached[r.pid] || 0, r.level + 1); });

@@ -689,10 +689,13 @@ function showWinSheet(stars) {
     <div class="stars">${[0, 1, 2].map(i => ICON.star(i < stars)).join('')}</div>
     ${streak}
     ${peek}
+    <div id="tRate" style="width:100%"></div>
     <div class="btns"><button class="btn primary" id="nextBtn">${last ? 'Finish' : 'Next'} ${ICON.next}</button></div>`);
   const svgs = sheetIn.querySelectorAll('.stars svg');
   svgs.forEach((s, i) => setTimeout(() => { s.classList.add('in'); if (i < stars) Snd.star(i); }, 260 + i * 170));
   if (!last) drawMini($('#peek'), LEVELS[G.li + 1], 92, true);
+  const GS = window.GameStats;
+  if (GS && (G.li === 1 || last) && (GS.myRating('topple') === null || last)) $('#tRate').appendChild(GS.ratePanel('topple'));
   $('#nextBtn').addEventListener('click', () => { hideSheet(); if (last) showResults(); else startLevel(G.li + 1); });
   $('#nextBtn').focus({ preventScroll: true });
 }
@@ -758,10 +761,12 @@ function showResults() {
         <tbody>${rows}</tbody>
         <tfoot><tr><td>Total</td><td>${totalTries}</td><td></td><td>${Math.floor(totalSecs / 60)}:${String(totalSecs % 60).padStart(2, '0')}</td><td></td></tr></tfoot>
       </table>
+      <div id="tRateEnd" style="width:100%"></div>
       <p class="muted">Testing this game? Take a screenshot of this card and send it back.</p>
       <div class="btns"><button class="btn primary" id="againBtn">${ICON.retry} Play again</button></div>
     </div>`;
   el.hidden = false;
+  if (window.GameStats) $('#tRateEnd').appendChild(window.GameStats.ratePanel('topple'));
   el.querySelectorAll('canvas[data-i]').forEach(cv => { const i = +cv.dataset.i; drawMini(cv, LEVELS[i], 64, !save.results[i]); });
   $('#againBtn').addEventListener('click', () => {
     save = Object.assign(freshSave(), { sound: save.sound }); writeSave();

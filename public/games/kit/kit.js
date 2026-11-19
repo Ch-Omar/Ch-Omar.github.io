@@ -73,6 +73,7 @@ function start(def) {
       <header class="kbar">
         <a class="kicon" href="../" aria-label="All games">${ICON.back}</a>
         <div class="ktitle"><b>${def.title}</b><span id="klvl"></span></div>
+        <button class="kicon" id="krateBtn" aria-label="Rate this game from 0 to 10" style="width:auto;padding:0 10px;border-radius:999px;font-size:14px;gap:4px;display:flex"></button>
         <button class="kicon" id="khelpBtn" aria-label="How to play">${ICON.help}</button>
         <button class="kicon" id="ksoundBtn" aria-label="Sound on or off"></button>
         <button class="kicon" id="kretryBtn" aria-label="Start this level again">${ICON.retry}</button>
@@ -117,7 +118,17 @@ function start(def) {
     $('kdots').innerHTML = Array.from({ length: LEVELS }, (_, i) =>
       `<button data-i="${i}" class="${i === li ? 'now' : save.stars[i] ? 'done' : ''}" ${i > u ? 'disabled' : ''} aria-label="Level ${i + 1}"><i></i></button>`).join('');
     $('ksoundBtn').innerHTML = soundOn ? ICON.soundOn : ICON.soundOff;
+    const r = window.GameStats ? GameStats.myRating(def.id) : null;
+    $('krateBtn').innerHTML = `<span style="color:var(--accent)">★</span>${r === null ? 'Rate' : r + '/10'}`;
   }
+  function ratePanel() { return window.GameStats ? GameStats.ratePanel(def.id, () => renderHead()) : document.createElement('div'); }
+  $('krateBtn').addEventListener('click', () => {
+    Snd.init();
+    openSheet(`<div class="kbig" style="font-size:28px">Rate ${def.title}</div><div id="krateSlot" style="width:100%"></div>
+      <div class="kbtns"><button class="kbtn alt" id="krateClose">Back to the game</button></div>`);
+    $('krateSlot').appendChild(ratePanel());
+    $('krateClose').addEventListener('click', hideSheet);
+  });
   $('kdots').addEventListener('click', e => { const b = e.target.closest('button[data-i]'); if (b && !b.disabled) { Snd.init(); load(+b.dataset.i, true); } });
   $('ksoundBtn').addEventListener('click', () => { soundOn = !soundOn; save.sound = soundOn; store(); Snd.init(); renderHead(); });
   $('kretryBtn').addEventListener('click', () => { Snd.init(); if (!ended) tries++; load(li, false); });
@@ -199,7 +210,10 @@ function start(def) {
           openSheet(`<div class="kbig">${last ? 'All 10 done!' : 'Level ' + (li + 1) + ' done'}</div>
             <div class="kstars">${[0, 1, 2].map(k => ICON.star(k < stars)).join('')}</div>
             ${note ? `<div class="ksub">${note}</div>` : ''}
+            <div id="kwinRate" style="width:100%"></div>
             <div class="kbtns">${last ? `<a class="kbtn primary" href="../">More games ${ICON.next}</a>` : `<button class="kbtn primary" id="knext">Next ${ICON.next}</button>`}</div>`);
+          // ask for a rating after the 2nd level and at the end, until the player has given one
+          if (window.GameStats && (li === 1 || last) && (GameStats.myRating(def.id) === null || last)) $('kwinRate').appendChild(ratePanel());
           sheetIn.querySelectorAll('.kstars svg').forEach((s, k) => setTimeout(() => { s.classList.add('in'); if (k < stars) Snd.star(k); }, 250 + k * 170));
           const nb = $('knext'); if (nb) { nb.addEventListener('click', () => load(li + 1, true)); nb.focus({ preventScroll: true }); }
         }, 700);
