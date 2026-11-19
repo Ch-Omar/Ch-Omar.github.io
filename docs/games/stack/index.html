@@ -1,0 +1,68 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<title>Stack Up</title>
+<meta name="description" content="Tap at the right moment to stack blocks into a tall tower.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Lilita+One&family=Nunito:wght@700;800;900&display=swap">
+<link rel="stylesheet" href="../kit/kit.css">
+</head>
+<body>
+<script src="../kit/firebase-config.js"></script>
+<script src="../kit/stats.js"></script>
+<script src="../kit/kit.js"></script>
+<script>
+// floors to build, sliding speed (board widths per second)
+const SPEC = [[8, 0.55], [10, 0.62], [12, 0.7], [14, 0.76], [16, 0.82], [18, 0.88], [20, 0.94], [22, 1.0], [24, 1.07], [26, 1.15]];
+const COLORS = ['#f0505e', '#ff9a3c', '#ffd54a', '#5acb74', '#4f8ef2', '#a06ee2', '#f8a3c6'];
+
+Kit.start({
+  id: 'stack', title: 'Stack Up', accent: ['#5acb74', '#2f8f4a'],
+  help: ['A block slides back and forth above the tower.', 'Tap to drop it. The part hanging over the edge is cut off.', 'Build the tower to the goal height. Drop exactly on top for a perfect drop.'],
+  tips: { 0: 'Tap when the block is right above the tower' },
+  level(i, api) {
+    const [goal, speed] = SPEC[i];
+    const tower = [{ x: 0.2, w: 0.6 }];
+    let mov = { x: 0, w: 0.6, dir: 1 }, falling = [], perfect = 0, cam = 0, bh = 30, flash = 0;
+    const C = api.canvas(o => { bh = Math.max(18, Math.min(34, o.h / 16)); });
+    const hud = () => api.info(`<span class="chip">Floors: ${tower.length - 1} / ${goal}</span>${perfect > 1 ? `<span class="chip">Perfect ×${perfect}</span>` : ''}`);
+    hud();
+    C.cv.addEventListener('pointerdown', () => {
+      if (api.ended()) return;
+      const top = tower[tower.length - 1];
+      const l = Math.max(mov.x, top.x), r = Math.min(mov.x + mov.w, top.x + top.w);
+      if (r - l <= 0.004) { falling.push({ x: mov.x, w: mov.w, y: tower.length, vy: 0, c: tower.length }); mov = null; api.lose('Missed!', `${tower.length - 1} floors of ${goal}. Watch the edge, not the middle.`); return; }
+      let nb;
+      if (Math.abs(mov.x - top.x) < 0.012) { nb = { x: top.x, w: top.w }; perfect++; flash = performance.now(); api.snd.pop(perfect + 3); api.vib(15); }
+      else {
+        nb = { x: l, w: r - l }; perfect = 0; api.snd.tap(); api.vib(8);
+        const cut = mov.x < top.x ? { x: mov.x, w: top.x - mov.x } : { x: r, w: mov.x + mov.w - r };
+        falling.push({ ...cut, y: tower.length, vy: 0, c: tower.length });
+      }
+      tower.push(nb); hud();
+      if (tower.length - 1 >= goal) { mov = null; api.win(); return; }
+      mov = { x: tower.length % 2 ? -nb.w : 1, w: nb.w, dir: tower.length % 2 ? 1 : -1 };
+    });
+    api.loop((dt, now) => {
+      if (mov && !api.ended()) { mov.x += mov.dir * speed * dt; if (mov.x > 1) mov.dir = -1; if (mov.x + mov.w < 0) mov.dir = 1; }
+      const { ctx } = C; C.clear();
+      const W = Math.min(C.w - 16, 420), ox = (C.w - W) / 2;
+      const want = Math.max(0, tower.length - Math.floor((C.h * 0.55) / bh)); cam += (want - cam) * Math.min(1, dt * 6);
+      const Y = f => C.h - 10 - (f - cam + 1) * bh;
+      const block = (b, f, c, a = 1) => { ctx.globalAlpha = a; ctx.fillStyle = COLORS[c % COLORS.length]; api.rr(ctx, ox + b.x * W, Y(f), b.w * W, bh - 2, 5); ctx.fill(); ctx.fillStyle = 'rgba(255,255,255,.28)'; api.rr(ctx, ox + b.x * W + 3, Y(f) + 3, Math.max(0, b.w * W - 6), (bh - 2) * 0.28, 3); ctx.fill(); ctx.globalAlpha = 1; };
+      // goal line
+      const gy = Y(goal) ; ctx.setLineDash([8, 8]); ctx.strokeStyle = 'rgba(255,200,61,.6)'; ctx.lineWidth = 2; ctx.beginPath(); ctx.moveTo(ox, gy); ctx.lineTo(ox + W, gy); ctx.stroke(); ctx.setLineDash([]);
+      tower.forEach((b, f) => block(b, f, f));
+      if (now - flash < 250) { const t = tower[tower.length - 1]; ctx.strokeStyle = '#fff'; ctx.lineWidth = 3; api.rr(ctx, ox + t.x * W - 3, Y(tower.length - 1) - 3, t.w * W + 6, bh + 4, 7); ctx.stroke(); }
+      if (mov) block(mov, tower.length, tower.length);
+      falling = falling.filter(f => { f.vy += dt * 14; f.y -= f.vy * dt * 3; block(f, f.y, f.c, 0.8); return f.y > cam - 20; });
+    });
+  },
+});
+
+</script>
+</body>
+</html>
