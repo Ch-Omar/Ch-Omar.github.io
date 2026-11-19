@@ -1,0 +1,50 @@
+// hits needed, seconds a target stays, new target every n seconds, share of bombs
+const SPEC = [[10, 1.8, 0.9, 0], [14, 1.6, 0.8, 0.1], [16, 1.5, 0.75, 0.15], [18, 1.4, 0.7, 0.2], [20, 1.3, 0.65, 0.2], [22, 1.2, 0.6, 0.25], [24, 1.1, 0.55, 0.25], [26, 1.0, 0.5, 0.3], [28, 0.95, 0.48, 0.3], [30, 0.9, 0.45, 0.35]];
+const COLORS = ['#5acb74', '#4f8ef2', '#ffd54a', '#a06ee2'];
+
+Kit.start({
+  id: 'tap', title: 'Tap Rush', accent: ['#ffd54a', '#c99b17'],
+  help: ['Circles pop up all over the board. Tap them before they shrink away.', 'Never tap a bomb (dark circle with a fuse).', 'A missed circle or a tapped bomb costs a heart. Reach the hits needed to win.'],
+  tips: { 0: 'Tap the circles before they vanish' },
+  level(i, api) {
+    const [need, life, every, bombs] = SPEC[i], R = api.rng;
+    let hits = 0, hearts = 3, targets = [], t = 0, next = 0.8, fx = [];
+    const C = api.canvas();
+    const hud = () => api.info(`<span class="chip">Hits ${hits} / ${need}</span><span class="chip">${'♥'.repeat(hearts)}<span style="opacity:.3">${'♥'.repeat(3 - hearts)}</span></span>`);
+    hud();
+    const hurt = msg => { hearts--; hud(); api.snd.bad(); api.vib(50); if (hearts <= 0) api.lose(msg, `${hits} of ${need} hits.`); };
+    C.cv.addEventListener('pointerdown', e => {
+      if (api.ended()) return;
+      const p = C.point(e);
+      for (let k = targets.length - 1; k >= 0; k--) {
+        const o = targets[k], r = o.r * (1 - (t - o.t0) / life * 0.6);
+        if (Math.hypot(p.x - o.x, p.y - o.y) <= r + 8) {
+          targets.splice(k, 1);
+          fx.push({ x: o.x, y: o.y, c: o.bomb ? '#f0505e' : COLORS[o.c], t0: performance.now() });
+          if (o.bomb) { api.snd.thud(); hurt('Boom!'); }
+          else { hits++; api.snd.pop(hits % 14); api.vib(6); hud(); if (hits >= need) api.win(hearts === 3 ? 'No miss' : ''); }
+          return;
+        }
+      }
+    });
+    api.loop((dt, now) => {
+      if (!api.ended()) {
+        t += dt;
+        if (t >= next) {
+          next = t + every * (0.7 + R() * 0.6);
+          const r = Math.min(C.w, C.h) * 0.09;
+          targets.push({ x: r + R() * (C.w - 2 * r), y: r + R() * (C.h - 2 * r), r, t0: t, bomb: R() < bombs, c: (R() * COLORS.length) | 0 });
+        }
+        targets = targets.filter(o => { if (t - o.t0 < life) return true; if (!o.bomb && !api.ended()) hurt('Too slow'); return false; });
+      }
+      const { ctx } = C; C.clear();
+      for (const o of targets) {
+        const q = (t - o.t0) / life, r = o.r * (1 - q * 0.6);
+        ctx.beginPath(); ctx.arc(o.x, o.y, r, 0, 7);
+        if (o.bomb) { ctx.fillStyle = '#1b1530'; ctx.fill(); ctx.strokeStyle = '#f0505e'; ctx.lineWidth = 3; ctx.stroke(); ctx.strokeStyle = '#ffd54a'; ctx.beginPath(); ctx.moveTo(o.x + r * 0.5, o.y - r * 0.7); ctx.lineTo(o.x + r * 0.9, o.y - r * 1.2); ctx.stroke(); }
+        else { ctx.fillStyle = COLORS[o.c]; ctx.fill(); ctx.strokeStyle = 'rgba(255,255,255,.8)'; ctx.lineWidth = 3; ctx.beginPath(); ctx.arc(o.x, o.y, r, -Math.PI / 2, -Math.PI / 2 + (1 - q) * Math.PI * 2); ctx.stroke(); }
+      }
+      fx = fx.filter(f => { const q = (now - f.t0) / 300; if (q > 1) return false; ctx.globalAlpha = 1 - q; ctx.strokeStyle = f.c; ctx.lineWidth = 4; ctx.beginPath(); ctx.arc(f.x, f.y, 20 + q * 40, 0, 7); ctx.stroke(); ctx.globalAlpha = 1; return true; });
+    });
+  },
+});

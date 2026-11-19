@@ -1,0 +1,41 @@
+// size, how many random taps built the puzzle (so it is always solvable in that many taps)
+const SPEC = [[3, 2], [3, 3], [4, 3], [4, 4], [5, 4], [5, 5], [5, 6], [6, 6], [6, 7], [7, 8]];
+
+Kit.start({
+  id: 'lights', title: 'Lights Off', accent: ['#ffd54a', '#c99b17'],
+  help: ['Tap a lamp: it and the lamps above, below, left and right of it switch.', 'Turn every lamp off.', 'You have a limited number of taps.'],
+  tips: { 0: 'A tap switches the lamp and its four neighbours' },
+  level(i, api) {
+    const [N, k] = SPEC[i], R = api.rng, on = new Array(N * N).fill(false), changed = new Array(N * N).fill(0);
+    const press = c => { const x = c % N, y = (c / N) | 0; for (const [dx, dy] of [[0, 0], [1, 0], [-1, 0], [0, 1], [0, -1]]) { const nx = x + dx, ny = y + dy; if (nx >= 0 && ny >= 0 && nx < N && ny < N) { on[ny * N + nx] = !on[ny * N + nx]; changed[ny * N + nx] = performance.now(); } } };
+    const picks = new Set(); while (picks.size < k) picks.add((R() * N * N) | 0);
+    picks.forEach(press);
+    if (on.every(v => !v)) press(0);
+    let left = k + (i < 4 ? 2 : 1), cs = 40, ox = 0, oy = 0;
+    const C = api.canvas(o => { cs = Math.floor(Math.min((o.w - 8) / N, (o.h - 8) / N, 84)); ox = (o.w - cs * N) / 2; oy = (o.h - cs * N) / 2; });
+    const hud = () => api.info(`<span class="chip${left <= 1 ? ' warn' : ''}">Taps left: ${left}</span><span class="chip">Lamps on: ${on.filter(Boolean).length}</span>`);
+    hud();
+    C.cv.addEventListener('pointerup', e => {
+      if (api.ended()) return;
+      const p = C.point(e), x = Math.floor((p.x - ox) / cs), y = Math.floor((p.y - oy) / cs);
+      if (x < 0 || y < 0 || x >= N || y >= N) return;
+      press(y * N + x); left--; api.snd.tap(); api.vib(6); hud();
+      if (on.every(v => !v)) api.win();
+      else if (left <= 0) api.lose('Out of taps', 'Each lamp only needs to be tapped once at most. Order does not matter.');
+    });
+    api.loop((dt, now) => {
+      const { ctx } = C; C.clear();
+      for (let c = 0; c < N * N; c++) {
+        const x = ox + (c % N) * cs, y = oy + ((c / N) | 0) * cs, cx = x + cs / 2, cy = y + cs / 2, q = Math.min(1, (now - changed[c]) / 180);
+        ctx.fillStyle = '#0d1e45'; api.rr(ctx, x + 3, y + 3, cs - 6, cs - 6, cs * 0.2); ctx.fill();
+        const r = cs * 0.3 * (0.85 + 0.15 * q);
+        if (on[c]) {
+          const gr = ctx.createRadialGradient(cx, cy, 0, cx, cy, cs * 0.6); gr.addColorStop(0, 'rgba(255,213,74,.55)'); gr.addColorStop(1, 'rgba(255,213,74,0)');
+          ctx.fillStyle = gr; ctx.fillRect(x, y, cs, cs);
+          ctx.beginPath(); ctx.arc(cx, cy, r, 0, 7); ctx.fillStyle = '#ffe17a'; ctx.fill();
+          ctx.beginPath(); ctx.arc(cx - r * 0.3, cy - r * 0.3, r * 0.3, 0, 7); ctx.fillStyle = '#fff8d8'; ctx.fill();
+        } else { ctx.beginPath(); ctx.arc(cx, cy, r, 0, 7); ctx.fillStyle = '#2a3a66'; ctx.fill(); }
+      }
+    });
+  },
+});

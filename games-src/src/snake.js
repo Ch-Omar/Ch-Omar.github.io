@@ -1,0 +1,50 @@
+// apples to eat, steps per second, rocks on the field
+const SPEC = [[5, 5, 0], [7, 5.5, 0], [8, 6, 3], [10, 6.5, 4], [12, 7, 5], [13, 7.5, 6], [15, 8, 7], [17, 8.5, 8], [19, 9, 9], [22, 10, 10]];
+const W = 13, H = 17;
+
+Kit.start({
+  id: 'snake', title: 'Snake Bites', accent: ['#5acb74', '#2f8f4a'],
+  help: ['Swipe (or use the arrow keys) to turn the snake.', 'Eat the apples to grow. Each level asks for a number of apples.', 'Do not hit the walls, the rocks or your own tail.'],
+  tips: { 0: 'Swipe to turn' },
+  level(i, api) {
+    const [goal, speed, rocks] = SPEC[i], R = api.rng;
+    let snake = [[6, 12], [6, 13], [6, 14]], dir = [0, -1], queue = [], apple = null, eaten = 0, acc = 0, cs = 20, ox = 0, oy = 0, started = false;
+    const rock = new Set();
+    while (rock.size < rocks) { const x = 1 + ((R() * (W - 2)) | 0), y = 1 + ((R() * (H - 6)) | 0); if (x !== 6) rock.add(y * W + x); }
+    const free = () => { for (;;) { const x = (R() * W) | 0, y = (R() * H) | 0; if (!rock.has(y * W + x) && !snake.some(([a, b]) => a === x && b === y)) return [x, y]; } };
+    apple = free();
+    const C = api.canvas(o => { cs = Math.floor(Math.min((o.w - 8) / W, (o.h - 8) / H)); ox = (o.w - cs * W) / 2; oy = (o.h - cs * H) / 2; });
+    const hud = () => api.info(`<span class="chip">🍎 ${eaten} / ${goal}</span>`);
+    hud();
+    const turn = d => { const last = queue.length ? queue[queue.length - 1] : dir; if (d[0] === -last[0] && d[1] === -last[1]) return; if (d[0] === last[0] && d[1] === last[1]) return; if (queue.length < 3) queue.push(d); started = true; };
+    let sx = 0, sy = 0;
+    C.cv.addEventListener('pointerdown', e => { sx = e.clientX; sy = e.clientY; started = true; });
+    C.cv.addEventListener('pointermove', e => { if (e.buttons !== 1 && e.pointerType === 'mouse') return; const dx = e.clientX - sx, dy = e.clientY - sy; if (Math.hypot(dx, dy) < 24) return; turn(Math.abs(dx) > Math.abs(dy) ? [Math.sign(dx), 0] : [0, Math.sign(dy)]); sx = e.clientX; sy = e.clientY; });
+    const onKey = e => { const m = { ArrowUp: [0, -1], ArrowDown: [0, 1], ArrowLeft: [-1, 0], ArrowRight: [1, 0] }[e.key]; if (m) { e.preventDefault(); turn(m); } };
+    addEventListener('keydown', onKey);
+    api.loop((dt, now) => {
+      if (started && !api.ended()) {
+        acc += dt * speed;
+        while (acc >= 1) {
+          acc--;
+          if (queue.length) dir = queue.shift();
+          const [hx, hy] = snake[0], nx = hx + dir[0], ny = hy + dir[1];
+          if (nx < 0 || ny < 0 || nx >= W || ny >= H || rock.has(ny * W + nx) || snake.slice(0, -1).some(([a, b]) => a === nx && b === ny)) { api.snd.thud(); api.vib(80); api.lose('Crash!', `${eaten} of ${goal} apples. Turn a little earlier.`); break; }
+          snake.unshift([nx, ny]);
+          if (nx === apple[0] && ny === apple[1]) { eaten++; api.snd.pop(eaten); api.vib(8); hud(); if (eaten >= goal) { api.win(); break; } apple = free(); }
+          else snake.pop();
+        }
+      }
+      const { ctx } = C; C.clear();
+      for (let y = 0; y < H; y++) for (let x = 0; x < W; x++) { ctx.fillStyle = (x + y) % 2 ? '#2f7a4a' : '#358553'; ctx.fillRect(ox + x * cs, oy + y * cs, cs, cs); }
+      rock.forEach(r => { ctx.fillStyle = '#6b7088'; api.rr(ctx, ox + (r % W) * cs + 2, oy + ((r / W) | 0) * cs + 2, cs - 4, cs - 4, cs * 0.3); ctx.fill(); });
+      ctx.beginPath(); ctx.arc(ox + (apple[0] + 0.5) * cs, oy + (apple[1] + 0.5) * cs, cs * 0.38, 0, 7); ctx.fillStyle = '#f0505e'; ctx.fill();
+      ctx.fillStyle = '#5acb74'; ctx.fillRect(ox + (apple[0] + 0.48) * cs, oy + (apple[1] + 0.05) * cs, cs * 0.12, cs * 0.22);
+      snake.forEach(([x, y], k) => { ctx.fillStyle = k ? (k % 2 ? '#ffd54a' : '#f5c63a') : '#ff9a3c'; api.rr(ctx, ox + x * cs + 1, oy + y * cs + 1, cs - 2, cs - 2, cs * 0.35); ctx.fill(); });
+      const [hx, hy] = snake[0];
+      for (const s of [-1, 1]) { ctx.beginPath(); ctx.arc(ox + (hx + 0.5 + dir[0] * 0.15 - dir[1] * 0.2 * s) * cs, oy + (hy + 0.5 + dir[1] * 0.15 + dir[0] * 0.2 * s) * cs, cs * 0.1, 0, 7); ctx.fillStyle = '#1b1530'; ctx.fill(); }
+      if (!started) { ctx.fillStyle = 'rgba(7,22,51,.6)'; api.rr(ctx, C.w / 2 - 110, C.h / 2 - 24, 220, 48, 14); ctx.fill(); ctx.fillStyle = '#fff'; ctx.font = '800 17px Nunito, sans-serif'; ctx.textAlign = 'center'; ctx.textBaseline = 'middle'; ctx.fillText('Swipe to start', C.w / 2, C.h / 2); }
+    });
+    return { destroy() { removeEventListener('keydown', onKey); } };
+  },
+});
