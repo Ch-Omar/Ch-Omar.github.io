@@ -88,5 +88,18 @@ function ratePanel(game, onDone) {
   return wrap;
 }
 
+// Ratings given while the database refused them stay on the device: send them again once a day.
+// Saving the same rating again only replaces it, so nothing is counted twice.
+try {
+  const today = new Date().toISOString().slice(0, 10);
+  if (cfg && cfg.apiKey && localStorage.getItem('games.ratingsSent') !== today) {
+    for (let k = 0; k < localStorage.length; k++) {
+      const key = localStorage.key(k);
+      if (key && key.startsWith('games.rating.')) rate(key.slice(13), +localStorage.getItem(key));
+    }
+    localStorage.setItem('games.ratingsSent', today);
+  }
+} catch (e) {}
+
 window.GameStats = { record, timer, pid, rate, myRating, ratePanel, enabled: () => !!(cfg && cfg.apiKey) };
 })();
