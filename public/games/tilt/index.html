@@ -1,0 +1,119 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<title>Tilt Sort</title>
+<meta name="description" content="One swipe rolls every marble at once. Get each one into its hole.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Lilita+One&family=Nunito:wght@700;800;900&display=swap">
+<link rel="stylesheet" href="../kit/kit.css">
+</head>
+<body>
+<script src="../kit/kit.js"></script>
+<script>
+const LV = [{"W":7,"H":7,"g":"########0....##.....##.#...##.....##.....########","m":[19],"opt":2,"moves":4},{"W":7,"H":7,"g":"#########0...##...####....1####...##.#..#########","m":[38,33],"opt":2,"moves":4},{"W":7,"H":7,"g":"###########..##....1##.....##.0...##....#########","m":[24,23],"opt":4,"moves":6},{"W":8,"H":8,"g":"#########......##.....1##......##.0..####......##....###########","m":[10,44],"opt":4,"moves":5},{"W":8,"H":8,"g":"#########...#..##.#0...##..1...##...2..###..#.###.....##########","m":[42,30,26],"opt":5,"moves":6},{"W":8,"H":8,"g":"##########.....##....#.##.....2##..#..1##0.....###.....#########","m":[34,18,42],"opt":5,"moves":6},{"W":9,"H":9,"g":"##########.#.....##......####...1..###.#0...##.......###2.....##.#.....##########","m":[23,38,59],"opt":6,"moves":7},{"W":9,"H":9,"g":"##########.#.2.####..#....##...#...##......0##.......##.......##......1##########","m":[61,14,25],"opt":6,"moves":7},{"W":9,"H":9,"g":"##########.....#.##1.#...2##.#.....##...#...##.......##....3.0##.......##########","m":[43,28,32,70],"opt":6,"moves":7},{"W":9,"H":9,"g":"##########......###....3..##1....#.##2.#..#0##..#....##..#.##.##.......##########","m":[13,34,22,69],"opt":8,"moves":9}];
+const COLORS = ['#f0505e', '#4f8ef2', '#ffd54a', '#5acb74'];
+const D4 = [[0, -1], [1, 0], [0, 2 - 1], [-1, 0]];
+
+// Every marble rolls until a wall or another marble stops it; it drops into the hole of its own colour.
+function roll(L, pos0, d) {
+  const { W, g } = L, [dx, dy] = D4[d], pos = pos0.slice();
+  const proj = i => (pos[i] % W) * dx + ((pos[i] / W) | 0) * dy;
+  const order = pos.map((_, i) => i).filter(i => pos[i] >= 0).sort((a, b) => proj(b) - proj(a));
+  for (const i of order) {
+    let x = pos[i] % W, y = (pos[i] / W) | 0;
+    for (;;) {
+      const nx = x + dx, ny = y + dy, n = ny * W + nx;
+      if (g[n] === '#') break;
+      if (pos.some((p, j) => j !== i && p === n)) break;
+      x = nx; y = ny;
+      if (g[n] === String(i)) { pos[i] = -1 - n; break; }
+      pos[i] = n;
+    }
+    if (pos[i] >= 0) pos[i] = y * W + x;
+  }
+  return pos;
+}
+
+Kit.start({
+  id: 'tilt', title: 'Tilt Sort', accent: ['#8adaf8', '#3b8db3'],
+  help: ['Swipe anywhere (or use the arrow keys). <b>Every</b> marble rolls at once until something stops it.', 'A marble drops into the hole of its own colour.', 'Get every marble home before your moves run out.'],
+  tips: { 0: 'Swipe to roll the marble into its hole', 2: 'Marbles stop when they hit each other' },
+  level(i, api) {
+    const L = { ...LV[i], g: LV[i].g.split('') };
+    let pos = L.m.slice(), moves = L.moves, anim = null, cs = 30, ox = 0, oy = 0;
+    const C = api.canvas(o => { cs = Math.floor(Math.min((o.w - 8) / L.W, (o.h - 8) / L.H, 64)); ox = (o.w - cs * L.W) / 2; oy = (o.h - cs * L.H) / 2; });
+    const hud = () => api.info(`<span class="chip${moves <= 1 ? ' warn' : ''}">Moves left: ${moves}</span><span class="chip">Best: ${L.opt}</span>`);
+    hud();
+    let sx = 0, sy = 0, down = false;
+    C.cv.addEventListener('pointerdown', e => { down = true; sx = e.clientX; sy = e.clientY; });
+    C.cv.addEventListener('pointerup', e => {
+      if (!down) return; down = false;
+      const dx = e.clientX - sx, dy = e.clientY - sy;
+      if (Math.hypot(dx, dy) < 20) return;
+      act(Math.abs(dx) > Math.abs(dy) ? (dx > 0 ? 1 : 3) : (dy > 0 ? 2 : 0));
+    });
+    const onKey = e => { const m = { ArrowUp: 0, ArrowRight: 1, ArrowDown: 2, ArrowLeft: 3 }[e.key]; if (m !== undefined) { e.preventDefault(); act(m); } };
+    addEventListener('keydown', onKey);
+    const cell = p => (p >= 0 ? p : -1 - p);
+    function act(d) {
+      if (anim || api.ended()) return;
+      const next = roll(L, pos, d);
+      if (next.every((p, k) => p === pos[k])) { api.snd.bad(); api.shake(); return; }
+      let far = 0;
+      next.forEach((p, k) => { if (pos[k] >= 0) { const a = pos[k], b = cell(p); far = Math.max(far, Math.abs(a % L.W - b % L.W) + Math.abs(((a / L.W) | 0) - ((b / L.W) | 0))); } });
+      anim = { from: pos.slice(), to: next, t0: performance.now(), dur: 90 + far * 65 };
+      pos = next; moves--; hud(); api.snd.whoosh(); api.vib(8);
+    }
+    function finish() {
+      const fell = anim.to.filter((p, k) => p < 0 && anim.from[k] >= 0).length;
+      if (fell) { api.snd.pop(pos.filter(p => p < 0).length); api.vib(15); }
+      anim = null;
+      if (pos.every(p => p < 0)) api.win(moves > 0 ? `${moves} move${moves > 1 ? 's' : ''} to spare` : '');
+      else if (moves <= 0) api.lose('Out of moves', 'Plan where every marble stops before you swipe.');
+    }
+    api.loop((dt, now) => {
+      const { ctx } = C; C.clear();
+      // board
+      for (let y = 0; y < L.H; y++) for (let x = 0; x < L.W; x++) {
+        const c = L.g[y * L.W + x], px = ox + x * cs, py = oy + y * cs;
+        if (c === '#') {
+          ctx.fillStyle = '#2b4b8c'; api.rr(ctx, px + 1, py + 1, cs - 2, cs - 2, cs * 0.22); ctx.fill();
+          ctx.fillStyle = '#3a5fa8'; api.rr(ctx, px + 1, py + 1, cs - 2, cs * 0.55, cs * 0.22); ctx.fill();
+        } else {
+          ctx.fillStyle = '#0d1e45'; ctx.fillRect(px, py, cs, cs);
+          if (c >= '0' && c <= '9') {
+            const k = +c, filled = pos[k] < 0 && !(anim && anim.from[k] >= 0);
+            ctx.beginPath(); ctx.arc(px + cs / 2, py + cs / 2, cs * 0.36, 0, 7); ctx.fillStyle = '#030a1c'; ctx.fill();
+            ctx.lineWidth = cs * 0.09; ctx.strokeStyle = COLORS[k]; ctx.stroke();
+            if (filled) { ctx.beginPath(); ctx.arc(px + cs / 2, py + cs / 2, cs * 0.26, 0, 7); ctx.fillStyle = COLORS[k]; ctx.globalAlpha = 0.55; ctx.fill(); ctx.globalAlpha = 1; }
+          }
+        }
+      }
+      // marbles
+      let q = 1;
+      if (anim) { q = Math.min(1, (now - anim.t0) / anim.dur); }
+      const ease = 1 - Math.pow(1 - q, 2);
+      pos.forEach((p, k) => {
+        let a, b, sc = 1;
+        if (anim) { if (anim.from[k] < 0) return; a = anim.from[k]; b = cell(anim.to[k]); if (anim.to[k] < 0) sc = q > 0.85 ? 1 - (q - 0.85) / 0.15 * 0.7 : 1; }
+        else { if (p < 0) return; a = b = p; }
+        const x = ox + ((a % L.W) + ((b % L.W) - (a % L.W)) * ease + 0.5) * cs;
+        const y = oy + (((a / L.W) | 0) + (((b / L.W) | 0) - ((a / L.W) | 0)) * ease + 0.5) * cs;
+        const r = cs * 0.34 * sc;
+        ctx.beginPath(); ctx.ellipse(x, y + r * 0.75, r * 0.9, r * 0.35, 0, 0, 7); ctx.fillStyle = 'rgba(0,0,0,.35)'; ctx.fill();
+        const gr = ctx.createRadialGradient(x - r * 0.35, y - r * 0.4, r * 0.1, x, y, r);
+        gr.addColorStop(0, '#fff'); gr.addColorStop(0.25, COLORS[k]); gr.addColorStop(1, COLORS[k]);
+        ctx.beginPath(); ctx.arc(x, y, r, 0, 7); ctx.fillStyle = gr; ctx.fill();
+      });
+      if (anim && q >= 1) finish();
+    });
+    return { destroy() { removeEventListener('keydown', onKey); } };
+  },
+});
+
+</script>
+</body>
+</html>

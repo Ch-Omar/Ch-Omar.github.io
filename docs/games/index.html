@@ -1,0 +1,123 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<title>Games · Omar Chakroun</title>
+<meta name="description" content="Puzzle game prototypes. Play them and say which one you would keep playing.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Lilita+One&family=Nunito:wght@700;800;900&display=swap">
+<style>
+:root { --bg: #04152d; --panel: #0b2247; --panel-hi: #19376d; --primary: #576cbc; --text: #fff; --muted: #a9b7da; color-scheme: dark; }
+* { box-sizing: border-box; }
+body { margin: 0; background: radial-gradient(120% 60% at 50% 0%, #0b2a5a, var(--bg) 60%) var(--bg); color: var(--text); font-family: "Nunito", system-ui, sans-serif; font-weight: 700; min-height: 100vh;
+  padding-left: max(16px, env(safe-area-inset-left, 0px)); padding-right: max(16px, env(safe-area-inset-right, 0px)); }
+.wrap { max-width: 1040px; margin: 0 auto; padding-block: 28px 48px; }
+nav { display: flex; justify-content: space-between; align-items: center; gap: 12px; }
+nav a { color: var(--text); text-decoration: none; font-size: 18px; }
+nav a.home { font-size: 22px; font-weight: 800; }
+h1 { font-family: "Lilita One", system-ui, sans-serif; font-weight: 400; font-size: clamp(40px, 8vw, 64px); margin: 36px 0 8px; letter-spacing: .01em; }
+.lead { color: var(--muted); font-size: 18px; max-width: 60ch; margin: 0 0 28px; line-height: 1.45; }
+.grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(min(100%, 280px), 1fr)); gap: 16px; }
+.card { display: flex; flex-direction: column; gap: 8px; padding: 20px; border-radius: 22px; background: var(--panel); border: 1px solid rgba(255,255,255,.1);
+  color: var(--text); text-decoration: none; position: relative; overflow: hidden; transition: transform .15s, border-color .15s; min-width: 0; }
+.card::before { content: ""; position: absolute; inset: 0 0 auto 0; height: 6px; background: var(--c); }
+.card:hover, .card:focus-visible { transform: translateY(-3px); border-color: var(--c); outline: none; }
+.num { font-family: "Lilita One", sans-serif; color: var(--c); font-size: 15px; letter-spacing: .1em; }
+.card h2 { font-family: "Lilita One", sans-serif; font-weight: 400; font-size: 28px; margin: 0; }
+.card p { margin: 0; color: var(--muted); line-height: 1.4; flex: 1; }
+.prog { font-size: 14px; color: var(--muted); }
+.prog.on { color: var(--c); }
+footer { color: var(--muted); font-size: 14px; margin-top: 32px; }
+</style>
+</head>
+<body>
+<div class="wrap">
+  <nav><a class="home" href="/">Portfolio</a><a href="/#contact">Contact</a></nav>
+  <h1>Games</h1>
+  <p class="lead">Puzzle prototypes I am testing for my next mobile game. Each one has up to 10 levels. Play a few on your phone, then tell me which one you would keep playing.</p>
+  <div class="grid">
+    <a class="card" href="./noodle/" data-id="noodle" style="--c:#ffd54a">
+      <span class="num">01</span>
+      <h2>Noodle Out</h2>
+      <p>Tap noodles out of the bowl. Five bowls at the bottom, three of a colour clear.</p>
+      <span class="prog" data-prog="noodle">Not played yet</span>
+    </a>
+    <a class="card" href="./tilt/" data-id="tilt" style="--c:#8adaf8">
+      <span class="num">02</span>
+      <h2>Tilt Sort</h2>
+      <p>One swipe rolls every marble at once. Get each one into its hole.</p>
+      <span class="prog" data-prog="tilt">Not played yet</span>
+    </a>
+    <a class="card" href="./flood/" data-id="flood" style="--c:#5ab8f0">
+      <span class="num">03</span>
+      <h2>Flood Rescue</h2>
+      <p>Free the animals one by one before the water reaches them.</p>
+      <span class="prog" data-prog="flood">Not played yet</span>
+    </a>
+    <a class="card" href="./rail/" data-id="rail" style="--c:#ff9a3c">
+      <span class="num">04</span>
+      <h2>Switch Rail</h2>
+      <p>Flip the switches so every wagon reaches its station. It keeps speeding up.</p>
+      <span class="prog" data-prog="rail">Not played yet</span>
+    </a>
+    <a class="card" href="./gate/" data-id="gate" style="--c:#a06ee2">
+      <span class="num">05</span>
+      <h2>Gate Drop</h2>
+      <p>Drop marbles through flippers that switch sides, into the right cups.</p>
+      <span class="prog" data-prog="gate">Not played yet</span>
+    </a>
+    <a class="card" href="./mix/" data-id="mix" style="--c:#f8a3c6">
+      <span class="num">06</span>
+      <h2>Mix Lab</h2>
+      <p>Mix red, yellow, blue and white to match each order.</p>
+      <span class="prog" data-prog="mix">Not played yet</span>
+    </a>
+    <a class="card" href="./blast/" data-id="blast" style="--c:#5acb74">
+      <span class="num">07</span>
+      <h2>Blast Cascade</h2>
+      <p>A block puzzle where cleared rows make everything above fall for combos.</p>
+      <span class="prog" data-prog="blast">Not played yet</span>
+    </a>
+    <a class="card" href="./tower/" data-id="tower" style="--c:#ff7a59">
+      <span class="num">08</span>
+      <h2>Pull Tower</h2>
+      <p>Pull coloured bricks without bringing the tower down.</p>
+      <span class="prog" data-prog="tower">Not played yet</span>
+    </a>
+    <a class="card" href="./sand/" data-id="sand" style="--c:#e6c15a">
+      <span class="num">09</span>
+      <h2>Sand Jars</h2>
+      <p>Flip the ramps so pouring sand lands in the jar of its colour.</p>
+      <span class="prog" data-prog="sand">Not played yet</span>
+    </a>
+    <a class="card" href="./mosaic/" data-id="mosaic" style="--c:#e6cf7a">
+      <span class="num">10</span>
+      <h2>Mosaic</h2>
+      <p>One gold tile in every row, column and colour area. None may touch.</p>
+      <span class="prog" data-prog="mosaic">Not played yet</span>
+    </a>
+    <a class="card" href="./topple/" data-id="topple" style="--c:#f6efdd">
+      <span class="num">11</span>
+      <h2>Topple</h2>
+      <p>Fill the gaps, push the first domino, and watch them reveal a picture.</p>
+      <span class="prog" data-prog="topple">Not played yet</span>
+    </a>
+  </div>
+  <footer>Progress is saved on this device only.</footer>
+</div>
+<script>
+document.querySelectorAll('[data-prog]').forEach(el => {
+  const id = el.dataset.prog;
+  try {
+    let done = 0, total = 10, stars = 0;
+    if (id === 'topple') { const d = JSON.parse(localStorage.getItem('topple.proto.v1')); total = 8; if (d) { done = d.results.filter(Boolean).length; stars = d.results.filter(Boolean).reduce((a, r) => a + r.stars, 0); } }
+    else { const d = JSON.parse(localStorage.getItem('games.' + id)); if (d && d.stars) { done = Object.keys(d.stars).length; stars = Object.values(d.stars).reduce((a, b) => a + b, 0); } }
+    if (done) { el.textContent = done + ' / ' + total + ' levels · ' + stars + ' ★'; el.classList.add('on'); }
+    else el.textContent = total + ' levels';
+  } catch (e) {}
+});
+</script>
+</body>
+</html>

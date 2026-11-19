@@ -1,0 +1,120 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<title>Mix Lab</title>
+<meta name="description" content="Mix red, yellow, blue and white to match each order.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Lilita+One&family=Nunito:wght@700;800;900&display=swap">
+<link rel="stylesheet" href="../kit/kit.css">
+</head>
+<body>
+<script src="../kit/kit.js"></script>
+<script>
+// Paints: red, yellow, blue, white. Colour of a mix uses the painter's colour wheel (RYB), then white lightens it.
+const PAINTS = [{ n: 'Red', c: '#e8333f' }, { n: 'Yellow', c: '#ffd23a' }, { n: 'Blue', c: '#2f63d6' }, { n: 'White', c: '#ffffff' }];
+const CORNERS = [[1, 1, 1], [1, 0, 0], [1, 1, 0], [0.163, 0.373, 0.6], [1, 0.5, 0], [0.5, 0, 0.5], [0, 0.66, 0.2], [0.2, 0.094, 0]];
+function ryb(r, y, b) {
+  const lerp = (a, c, t) => a + (c - a) * t, out = [];
+  for (let ch = 0; ch < 3; ch++) {
+    const c = i => CORNERS[i][ch];
+    const x0 = lerp(lerp(c(0), c(3), b), lerp(c(1), c(5), b), r), x1 = lerp(lerp(c(2), c(6), b), lerp(c(4), c(7), b), r);
+    out.push(lerp(x0, x1, y));
+  }
+  return out;
+}
+function mixColor(n) {
+  const tot = n[0] + n[1] + n[2] + n[3];
+  if (!tot) return 'transparent';
+  const m = Math.max(n[0], n[1], n[2]);
+  let rgb = m ? ryb(n[0] / m, n[1] / m, n[2] / m) : [1, 1, 1];
+  const w = n[3] / tot;
+  rgb = rgb.map(v => v + (1 - v) * w * 0.85);
+  return `rgb(${rgb.map(v => Math.round(v * 255)).join(',')})`;
+}
+// orders per level, units per order, paints allowed
+const SPEC = [[3, [2, 2], 3], [4, [2, 3], 3], [4, [3, 3], 3], [4, [2, 3], 4], [5, [3, 3], 4], [5, [3, 4], 4], [5, [4, 4], 3], [6, [3, 4], 4], [6, [4, 4], 4], [7, [4, 4], 4]];
+
+Kit.start({
+  id: 'mix', title: 'Mix Lab', accent: ['#f8a3c6', '#c0648d'],
+  help: ['Each order shows a colour. Mix it in the glass with the paint bottles.', 'Every tap pours one drop. The glass is full when it has as many drops as the order asks for.', 'A wrong mix costs a heart. You can empty the glass before it is full.'],
+  tips: { 0: 'Two different paints make this colour', 3: 'White makes a colour lighter' },
+  level(i, api) {
+    const [count, [umin, umax], np] = SPEC[i], R = api.rng, orders = [];
+    while (orders.length < count) {
+      const units = umin + ((R() * (umax - umin + 1)) | 0), rec = [0, 0, 0, 0];
+      for (let u = 0; u < units; u++) rec[(R() * np) | 0]++;
+      if (rec.filter(v => v).length < 2) continue;
+      if (rec[0] + rec[1] + rec[2] === 0) continue;
+      const key = rec.join();
+      if (orders.some(o => o.join() === key)) continue;
+      orders.push(rec);
+    }
+    let k = 0, hearts = 3, glass = [0, 0, 0, 0], busy = false;
+    api.stage.innerHTML = `
+      <style>
+        .mx { height: 100%; display: flex; flex-direction: column; align-items: center; justify-content: space-between; gap: 12px; padding-block: 6px; }
+        .mx-top { display: flex; gap: 28px; align-items: flex-end; justify-content: center; flex: 1; min-height: 0; }
+        .mx-col { display: flex; flex-direction: column; align-items: center; gap: 8px; font-size: 14px; color: var(--muted); }
+        .mx-order { width: 110px; height: 110px; border-radius: 50%; border: 5px solid #fff; box-shadow: 0 8px 24px rgba(0,0,0,.4); }
+        .mx-glass { width: 104px; height: 150px; border: 4px solid rgba(255,255,255,.7); border-top: none; border-radius: 0 0 26px 26px; position: relative; overflow: hidden; background: rgba(255,255,255,.05); }
+        .mx-fill { position: absolute; left: 0; right: 0; bottom: 0; transition: height .25s, background .25s; }
+        .mx-dots { display: flex; gap: 6px; }
+        .mx-dots i { width: 12px; height: 12px; border-radius: 50%; border: 2px solid rgba(255,255,255,.6); }
+        .mx-dots i.on { background: #fff; }
+        .mx-bottles { display: flex; gap: 10px; justify-content: center; flex-wrap: wrap; }
+        .mx-b { width: 72px; height: 96px; border: none; border-radius: 18px 18px 22px 22px; display: flex; align-items: flex-end; justify-content: center; padding-bottom: 8px; font-size: 13px; box-shadow: 0 5px 0 rgba(0,0,0,.35); position: relative; color: #1b1530; }
+        .mx-b::before { content: ""; position: absolute; top: -14px; left: 50%; width: 26px; height: 18px; margin-left: -13px; background: inherit; border-radius: 6px 6px 0 0; filter: brightness(.85); }
+        .mx-b:active { transform: translateY(4px); box-shadow: none; }
+        .mx-b span { background: rgba(255,255,255,.85); border-radius: 8px; padding: 1px 6px; }
+        .mx-empty { min-height: 44px; padding: 0 18px; border-radius: 14px; border: 1px solid var(--line); background: var(--panel); font-size: 15px; }
+      </style>
+      <div class="mx">
+        <div class="mx-top">
+          <div class="mx-col"><div class="mx-order" id="mxOrder"></div><span>Order</span></div>
+          <div class="mx-col"><div class="mx-glass" id="mxGlass"><div class="mx-fill" id="mxFill"></div></div><div class="mx-dots" id="mxDots"></div></div>
+        </div>
+        <div class="mx-bottles">${PAINTS.slice(0, np).map((p, j) => `<button class="mx-b" data-p="${j}" style="background:${p.c}" aria-label="Pour ${p.n}"><span>${p.n}</span></button>`).join('')}</div>
+        <button class="mx-empty" id="mxEmpty">Empty the glass</button>
+      </div>`;
+    const $ = id => api.stage.querySelector('#' + id);
+    const units = () => orders[k].reduce((a, b) => a + b, 0);
+    const poured = () => glass.reduce((a, b) => a + b, 0);
+    function render() {
+      $('mxOrder').style.background = mixColor(orders[k]);
+      $('mxFill').style.height = (poured() / units()) * 100 + '%';
+      $('mxFill').style.background = mixColor(glass);
+      $('mxDots').innerHTML = Array.from({ length: units() }, (_, j) => `<i class="${j < poured() ? 'on' : ''}"></i>`).join('');
+      api.info(`<span class="chip">Order ${k + 1} / ${orders.length}</span><span class="chip">${'♥'.repeat(hearts)}<span style="opacity:.3">${'♥'.repeat(3 - hearts)}</span></span>`);
+    }
+    render();
+    api.stage.querySelectorAll('.mx-b').forEach(b => b.addEventListener('click', () => {
+      if (busy || api.ended()) return;
+      glass[+b.dataset.p]++; api.snd.pop(poured()); api.vib(6); render();
+      if (poured() < units()) return;
+      busy = true;
+      const ok = glass.every((v, j) => v === orders[k][j]);
+      setTimeout(() => {
+        if (!api.alive()) return;
+        busy = false;
+        if (ok) {
+          api.snd.good(); k++; glass = [0, 0, 0, 0];
+          if (k >= orders.length) { k--; render(); api.win(hearts === 3 ? 'No wasted paint' : ''); return; }
+          render();
+        } else {
+          hearts--; api.snd.bad(); api.vib(40); api.shake($('mxGlass'));
+          const want = orders[k].map((v, j) => (v ? `${v} ${PAINTS[j].n.toLowerCase()}` : '')).filter(Boolean).join(' + ');
+          glass = [0, 0, 0, 0]; render();
+          if (hearts <= 0) api.lose('Out of hearts', `That order was ${want}.`);
+        }
+      }, 450);
+    }));
+    $('mxEmpty').addEventListener('click', () => { if (busy || api.ended() || !poured()) return; glass = [0, 0, 0, 0]; api.snd.whoosh(); render(); });
+  },
+});
+
+</script>
+</body>
+</html>

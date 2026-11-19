@@ -1,0 +1,100 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<title>Pull Tower</title>
+<meta name="description" content="Pull coloured bricks without bringing the tower down.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Lilita+One&family=Nunito:wght@700;800;900&display=swap">
+<link rel="stylesheet" href="../kit/kit.css">
+</head>
+<body>
+<script src="../kit/kit.js"></script>
+<script>
+const LV = [{"N":4,"rows":4,"bricks":[{"r":0,"x":0,"c":1},{"r":0,"x":2,"c":-1},{"r":0,"x":4,"c":-1},{"r":0,"x":6,"c":-1},{"r":1,"x":1,"c":0},{"r":1,"x":3,"c":-1},{"r":1,"x":5,"c":-1},{"r":2,"x":0,"c":0},{"r":2,"x":2,"c":1},{"r":2,"x":4,"c":-1},{"r":2,"x":6,"c":-1},{"r":3,"x":1,"c":1},{"r":3,"x":3,"c":-1},{"r":3,"x":5,"c":0}],"danger":1},{"N":4,"rows":5,"bricks":[{"r":0,"x":0,"c":-1},{"r":0,"x":2,"c":-1},{"r":0,"x":4,"c":-1},{"r":0,"x":6,"c":0},{"r":1,"x":1,"c":-1},{"r":1,"x":3,"c":0},{"r":1,"x":5,"c":-1},{"r":2,"x":0,"c":1},{"r":2,"x":2,"c":-1},{"r":2,"x":4,"c":-1},{"r":2,"x":6,"c":1},{"r":3,"x":1,"c":1},{"r":3,"x":3,"c":-1},{"r":3,"x":5,"c":-1},{"r":4,"x":0,"c":0},{"r":4,"x":2,"c":-1},{"r":4,"x":4,"c":-1},{"r":4,"x":6,"c":-1}],"danger":1},{"N":4,"rows":5,"bricks":[{"r":0,"x":0,"c":1},{"r":0,"x":2,"c":2},{"r":0,"x":4,"c":-1},{"r":0,"x":6,"c":-1},{"r":1,"x":1,"c":0},{"r":1,"x":3,"c":-1},{"r":1,"x":5,"c":2},{"r":2,"x":0,"c":0},{"r":2,"x":2,"c":-1},{"r":2,"x":4,"c":-1},{"r":2,"x":6,"c":1},{"r":3,"x":1,"c":-1},{"r":3,"x":3,"c":0},{"r":3,"x":5,"c":-1},{"r":4,"x":0,"c":-1},{"r":4,"x":2,"c":1},{"r":4,"x":4,"c":2},{"r":4,"x":6,"c":-1}],"danger":2},{"N":5,"rows":5,"bricks":[{"r":0,"x":0,"c":-1},{"r":0,"x":2,"c":-1},{"r":0,"x":4,"c":1},{"r":0,"x":6,"c":-1},{"r":0,"x":8,"c":-1},{"r":1,"x":1,"c":2},{"r":1,"x":3,"c":-1},{"r":1,"x":5,"c":-1},{"r":1,"x":7,"c":-1},{"r":2,"x":0,"c":2},{"r":2,"x":2,"c":0},{"r":2,"x":4,"c":-1},{"r":2,"x":6,"c":-1},{"r":2,"x":8,"c":-1},{"r":3,"x":1,"c":1},{"r":3,"x":3,"c":-1},{"r":3,"x":5,"c":0},{"r":3,"x":7,"c":-1},{"r":4,"x":0,"c":0},{"r":4,"x":2,"c":2},{"r":4,"x":4,"c":-1},{"r":4,"x":6,"c":1},{"r":4,"x":8,"c":-1}],"danger":2},{"N":5,"rows":6,"bricks":[{"r":0,"x":0,"c":-1},{"r":0,"x":2,"c":-1},{"r":0,"x":4,"c":-1},{"r":0,"x":6,"c":0},{"r":0,"x":8,"c":-1},{"r":1,"x":1,"c":-1},{"r":1,"x":3,"c":2},{"r":1,"x":5,"c":-1},{"r":1,"x":7,"c":2},{"r":2,"x":0,"c":-1},{"r":2,"x":2,"c":-1},{"r":2,"x":4,"c":2},{"r":2,"x":6,"c":-1},{"r":2,"x":8,"c":0},{"r":3,"x":1,"c":-1},{"r":3,"x":3,"c":-1},{"r":3,"x":5,"c":-1},{"r":3,"x":7,"c":1},{"r":4,"x":0,"c":-1},{"r":4,"x":2,"c":-1},{"r":4,"x":4,"c":1},{"r":4,"x":6,"c":-1},{"r":4,"x":8,"c":0},{"r":5,"x":1,"c":-1},{"r":5,"x":3,"c":-1},{"r":5,"x":5,"c":1},{"r":5,"x":7,"c":-1}],"danger":2},{"N":5,"rows":6,"bricks":[{"r":0,"x":0,"c":-1},{"r":0,"x":2,"c":-1},{"r":0,"x":4,"c":2},{"r":0,"x":6,"c":-1},{"r":0,"x":8,"c":-1},{"r":1,"x":1,"c":1},{"r":1,"x":3,"c":-1},{"r":1,"x":5,"c":-1},{"r":1,"x":7,"c":3},{"r":2,"x":0,"c":0},{"r":2,"x":2,"c":-1},{"r":2,"x":4,"c":-1},{"r":2,"x":6,"c":0},{"r":2,"x":8,"c":3},{"r":3,"x":1,"c":-1},{"r":3,"x":3,"c":-1},{"r":3,"x":5,"c":-1},{"r":3,"x":7,"c":2},{"r":4,"x":0,"c":3},{"r":4,"x":2,"c":-1},{"r":4,"x":4,"c":-1},{"r":4,"x":6,"c":0},{"r":4,"x":8,"c":2},{"r":5,"x":1,"c":1},{"r":5,"x":3,"c":-1},{"r":5,"x":5,"c":-1},{"r":5,"x":7,"c":1}],"danger":3},{"N":5,"rows":7,"bricks":[{"r":0,"x":0,"c":-1},{"r":0,"x":2,"c":-1},{"r":0,"x":4,"c":-1},{"r":0,"x":6,"c":-1},{"r":0,"x":8,"c":-1},{"r":1,"x":1,"c":-1},{"r":1,"x":3,"c":1},{"r":1,"x":5,"c":-1},{"r":1,"x":7,"c":-1},{"r":2,"x":0,"c":0},{"r":2,"x":2,"c":3},{"r":2,"x":4,"c":-1},{"r":2,"x":6,"c":3},{"r":2,"x":8,"c":-1},{"r":3,"x":1,"c":2},{"r":3,"x":3,"c":-1},{"r":3,"x":5,"c":-1},{"r":3,"x":7,"c":-1},{"r":4,"x":0,"c":2},{"r":4,"x":2,"c":3},{"r":4,"x":4,"c":-1},{"r":4,"x":6,"c":-1},{"r":4,"x":8,"c":1},{"r":5,"x":1,"c":2},{"r":5,"x":3,"c":-1},{"r":5,"x":5,"c":-1},{"r":5,"x":7,"c":1},{"r":6,"x":0,"c":0},{"r":6,"x":2,"c":-1},{"r":6,"x":4,"c":-1},{"r":6,"x":6,"c":-1},{"r":6,"x":8,"c":0}],"danger":3},{"N":5,"rows":7,"bricks":[{"r":0,"x":0,"c":-1},{"r":0,"x":2,"c":-1},{"r":0,"x":4,"c":-1},{"r":0,"x":6,"c":-1},{"r":0,"x":8,"c":2},{"r":1,"x":1,"c":-1},{"r":1,"x":3,"c":2},{"r":1,"x":5,"c":-1},{"r":1,"x":7,"c":0},{"r":2,"x":0,"c":0},{"r":2,"x":2,"c":2},{"r":2,"x":4,"c":-1},{"r":2,"x":6,"c":-1},{"r":2,"x":8,"c":0},{"r":3,"x":1,"c":1},{"r":3,"x":3,"c":-1},{"r":3,"x":5,"c":3},{"r":3,"x":7,"c":-1},{"r":4,"x":0,"c":1},{"r":4,"x":2,"c":-1},{"r":4,"x":4,"c":-1},{"r":4,"x":6,"c":-1},{"r":4,"x":8,"c":-1},{"r":5,"x":1,"c":3},{"r":5,"x":3,"c":-1},{"r":5,"x":5,"c":-1},{"r":5,"x":7,"c":-1},{"r":6,"x":0,"c":1},{"r":6,"x":2,"c":-1},{"r":6,"x":4,"c":3},{"r":6,"x":6,"c":-1},{"r":6,"x":8,"c":-1}],"danger":3},{"N":6,"rows":7,"bricks":[{"r":0,"x":0,"c":-1},{"r":0,"x":2,"c":-1},{"r":0,"x":4,"c":-1},{"r":0,"x":6,"c":-1},{"r":0,"x":8,"c":-1},{"r":0,"x":10,"c":-1},{"r":1,"x":1,"c":-1},{"r":1,"x":3,"c":-1},{"r":1,"x":5,"c":-1},{"r":1,"x":7,"c":-1},{"r":1,"x":9,"c":4},{"r":2,"x":0,"c":-1},{"r":2,"x":2,"c":-1},{"r":2,"x":4,"c":-1},{"r":2,"x":6,"c":-1},{"r":2,"x":8,"c":-1},{"r":2,"x":10,"c":4},{"r":3,"x":1,"c":-1},{"r":3,"x":3,"c":-1},{"r":3,"x":5,"c":0},{"r":3,"x":7,"c":-1},{"r":3,"x":9,"c":-1},{"r":4,"x":0,"c":0},{"r":4,"x":2,"c":4},{"r":4,"x":4,"c":-1},{"r":4,"x":6,"c":2},{"r":4,"x":8,"c":-1},{"r":4,"x":10,"c":1},{"r":5,"x":1,"c":3},{"r":5,"x":3,"c":-1},{"r":5,"x":5,"c":2},{"r":5,"x":7,"c":-1},{"r":5,"x":9,"c":3},{"r":6,"x":0,"c":3},{"r":6,"x":2,"c":1},{"r":6,"x":4,"c":-1},{"r":6,"x":6,"c":0},{"r":6,"x":8,"c":1},{"r":6,"x":10,"c":2}],"danger":3},{"N":6,"rows":8,"bricks":[{"r":0,"x":0,"c":-1},{"r":0,"x":2,"c":-1},{"r":0,"x":4,"c":-1},{"r":0,"x":6,"c":-1},{"r":0,"x":8,"c":0},{"r":0,"x":10,"c":-1},{"r":1,"x":1,"c":-1},{"r":1,"x":3,"c":3},{"r":1,"x":5,"c":-1},{"r":1,"x":7,"c":0},{"r":1,"x":9,"c":-1},{"r":2,"x":0,"c":1},{"r":2,"x":2,"c":-1},{"r":2,"x":4,"c":-1},{"r":2,"x":6,"c":-1},{"r":2,"x":8,"c":0},{"r":2,"x":10,"c":-1},{"r":3,"x":1,"c":-1},{"r":3,"x":3,"c":-1},{"r":3,"x":5,"c":-1},{"r":3,"x":7,"c":2},{"r":3,"x":9,"c":-1},{"r":4,"x":0,"c":1},{"r":4,"x":2,"c":-1},{"r":4,"x":4,"c":2},{"r":4,"x":6,"c":-1},{"r":4,"x":8,"c":2},{"r":4,"x":10,"c":-1},{"r":5,"x":1,"c":4},{"r":5,"x":3,"c":-1},{"r":5,"x":5,"c":-1},{"r":5,"x":7,"c":-1},{"r":5,"x":9,"c":4},{"r":6,"x":0,"c":3},{"r":6,"x":2,"c":-1},{"r":6,"x":4,"c":-1},{"r":6,"x":6,"c":1},{"r":6,"x":8,"c":-1},{"r":6,"x":10,"c":4},{"r":7,"x":1,"c":-1},{"r":7,"x":3,"c":-1},{"r":7,"x":5,"c":3},{"r":7,"x":7,"c":-1},{"r":7,"x":9,"c":-1}],"danger":2}];
+const COLORS = ['#f0505e', '#4f8ef2', '#ffd54a', '#5acb74', '#a06ee2'];
+const SLOTS = 5;
+
+Kit.start({
+  id: 'tower', title: 'Pull Tower', accent: ['#ff9a3c', '#c26a17'],
+  help: ['Tap a coloured brick to pull it out. Grey bricks stay.', 'A brick needs at least one brick under it. Pull the last one holding a brick up and the tower falls.', 'Pulled bricks go to the tray: three of a colour clear. Five mixed bricks and you lose.'],
+  tips: { 0: 'Pull a brick that does not hold anything up alone', 2: 'Group colours in the tray: three clear' },
+  level(i, api) {
+    const L = LV[i], N = L.N, rows = L.rows;
+    const br = L.bricks.map(b => ({ ...b, gone: false }));
+    const below = br.map(b => br.filter(a => a.r === b.r - 1 && Math.abs(a.x - b.x) <= 1));
+    let tray = [], u = 20, ox = 0, baseY = 0, trayY = 0, fall = null, flying = [], sway = 0;
+    const C = api.canvas(o => {
+      const trayH = 74;
+      u = Math.floor(Math.min((o.w - 20) / (2 * N + 1), (o.h - trayH - 20) / (rows * 1.05)));
+      ox = (o.w - u * 2 * N) / 2; baseY = o.h - trayH - 6; trayY = o.h - trayH + 10;
+    });
+    const left = () => br.filter(b => !b.gone && b.c >= 0).length;
+    const hud = () => api.info(`<span class="chip">Bricks to pull: ${left()}</span>`);
+    hud();
+    const supported = b => b.r === 0 || below[br.indexOf(b)].some(a => !a.gone);
+    const risk = () => br.filter(b => !b.gone && b.r > 0 && below[br.indexOf(b)].filter(a => !a.gone).length === 1).length;
+    const rect = b => [ox + b.x * u, baseY - (b.r + 1) * u * 1.0, u * 2, u];
+    C.cv.addEventListener('pointerup', e => {
+      if (api.ended() || fall) return;
+      const p = C.point(e);
+      const b = br.find(bb => { if (bb.gone) return false; const [x, y, w, h] = rect(bb); return p.x >= x && p.x <= x + w && p.y >= y && p.y <= y + h; });
+      if (!b) return;
+      if (b.c < 0) { api.snd.bad(); return; }
+      b.gone = true;
+      const loose = br.filter(bb => !bb.gone && !supported(bb));
+      const [x, y] = rect(b);
+      flying.push({ c: b.c, x, y, t0: performance.now() });
+      api.snd.whoosh(); api.vib(10);
+      if (loose.length) {
+        fall = { t0: performance.now(), loose };
+        api.snd.thud(); api.vib([40, 30, 80]);
+        setTimeout(() => api.lose('The tower fell', 'Before you pull a brick, check what is resting on it.'), 900);
+        return;
+      }
+      setTimeout(() => {
+        if (!api.alive() || api.ended()) return;
+        tray.push(b.c);
+        if (tray.filter(c => c === b.c).length >= 3) { let n = 0; tray = tray.filter(c => (c === b.c && n < 3 ? (n++, false) : true)); api.snd.pop(4); api.vib(15); }
+        else api.snd.tap();
+        hud();
+        if (tray.length >= SLOTS) api.lose('Tray full', 'Pull three of one colour before you start another.');
+        else if (!left() && !tray.length) api.win();
+      }, 330);
+    });
+    api.loop((dt, now) => {
+      const { ctx } = C; C.clear();
+      const target = Math.min(0.06, risk() * 0.008);
+      sway = target * Math.sin(now / 600);
+      ctx.fillStyle = '#2b4b8c'; api.rr(ctx, ox - u * 0.6, baseY, u * 2 * N + u * 1.2, 10, 5); ctx.fill();
+      ctx.save(); ctx.translate(C.w / 2, baseY); ctx.rotate(sway); ctx.translate(-C.w / 2, -baseY);
+      for (const b of br) {
+        if (b.gone) continue;
+        let [x, y, w, h] = rect(b);
+        ctx.save();
+        if (fall) { const q = Math.min(1, (now - fall.t0) / 900), k = fall.loose.includes(b) ? 1 : 0.3; ctx.translate(x + w / 2, y + h / 2); ctx.rotate(q * q * (b.x % 2 ? 1 : -1) * 1.2 * k); ctx.translate(-(x + w / 2), -(y + h / 2) + q * q * 300 * k); }
+        ctx.fillStyle = b.c >= 0 ? COLORS[b.c] : '#5b6a8f'; api.rr(ctx, x + 1.5, y + 1.5, w - 3, h - 3, u * 0.18); ctx.fill();
+        ctx.fillStyle = b.c >= 0 ? 'rgba(255,255,255,.3)' : 'rgba(255,255,255,.12)'; api.rr(ctx, x + 6, y + 4, w - 12, h * 0.22, 3); ctx.fill();
+        ctx.restore();
+      }
+      ctx.restore();
+      flying = flying.filter(f => {
+        const q = Math.min(1, (now - f.t0) / 320); if (q >= 1) return false;
+        const tx = C.w / 2 - 20, x = f.x + (tx - f.x) * q, y = f.y + (trayY - f.y) * q - Math.sin(q * Math.PI) * 60;
+        ctx.fillStyle = COLORS[f.c]; api.rr(ctx, x, y, u * 2 * (1 - q * 0.4), u * (1 - q * 0.4), 6); ctx.fill(); return true;
+      });
+      const sw = Math.min(62, (C.w - 24) / SLOTS - 8), gap = 8, x0 = (C.w - (SLOTS * sw + (SLOTS - 1) * gap)) / 2;
+      for (let s = 0; s < SLOTS; s++) {
+        const x = x0 + s * (sw + gap);
+        ctx.fillStyle = s === SLOTS - 1 && tray.length >= SLOTS - 1 ? 'rgba(255,84,104,.25)' : 'rgba(255,255,255,.08)'; api.rr(ctx, x, trayY, sw, 42, 10); ctx.fill();
+        if (tray[s] !== undefined) { ctx.fillStyle = COLORS[tray[s]]; api.rr(ctx, x + 5, trayY + 9, sw - 10, 24, 6); ctx.fill(); }
+      }
+    });
+  },
+});
+
+</script>
+</body>
+</html>
