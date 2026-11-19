@@ -24,6 +24,10 @@ h1 { font-family: "Lilita One", system-ui, sans-serif; font-weight: 400; font-si
   color: var(--text); text-decoration: none; position: relative; overflow: hidden; transition: transform .15s, border-color .15s; min-width: 0; }
 .card::before { content: ""; position: absolute; inset: 0 0 auto 0; height: 6px; background: var(--c); }
 .card:hover, .card:focus-visible { transform: translateY(-3px); border-color: var(--c); outline: none; }
+.top { display: flex; align-items: center; justify-content: space-between; gap: 12px; }
+.icon { width: 76px; height: 76px; border-radius: 18px; background: #071633; border: 1px solid rgba(255,255,255,.1); display: grid; place-items: center; flex: none; }
+.icon svg { width: 64px; height: 64px; display: block; }
+.card:hover .icon { border-color: var(--c); }
 .num { font-family: "Lilita One", sans-serif; color: var(--c); font-size: 15px; letter-spacing: .1em; }
 .card h2 { font-family: "Lilita One", sans-serif; font-weight: 400; font-size: 28px; margin: 0; }
 .card p { margin: 0; color: var(--muted); line-height: 1.4; flex: 1; }
@@ -39,181 +43,181 @@ footer { color: var(--muted); font-size: 14px; margin-top: 32px; }
   <p class="lead">Puzzle prototypes I am testing for my next mobile game. Each one has up to 10 levels. Play a few on your phone, and rate each one from 0 to 10 (the ★ button in every game) so I know which one to build for real.</p>
   <div class="grid">
     <a class="card" href="./noodle/" data-id="noodle" style="--c:#ffd54a">
-      <span class="num">01</span>
+      <div class="top"><span class="icon" aria-hidden="true"><svg viewBox="0 0 64 64"><path d="M10 14 C 22 14, 22 30, 34 30 S 46 18, 54 18" fill="none" stroke="#ffd54a" stroke-width="8" stroke-linecap="round" stroke-linejoin="round" /><circle cx="51.5" cy="18" r="1.6" fill="#ffffff" /><circle cx="56.5" cy="18" r="1.6" fill="#ffffff" /><path d="M12 40 L 12 22" fill="none" stroke="#f0505e" stroke-width="8" stroke-linecap="round" stroke-linejoin="round" /><circle cx="9.5" cy="21" r="1.6" fill="#ffffff" /><circle cx="14.5" cy="21" r="1.6" fill="#ffffff" /><path d="M8 46 Q 32 64 56 46 Z" fill="#c9d6ff" opacity=".35"/><path d="M8 46 Q 32 64 56 46" fill="none" stroke="#c9d6ff" stroke-width="3" stroke-linecap="round" stroke-linejoin="round" /></svg></span><span class="num">01</span></div>
       <h2>Noodle Out</h2>
       <p>Tap noodles out of the bowl. Five bowls at the bottom, three of a colour clear.</p>
       <span class="prog" data-prog="noodle">Not played yet</span>
     </a>
     <a class="card" href="./tilt/" data-id="tilt" style="--c:#8adaf8">
-      <span class="num">02</span>
+      <div class="top"><span class="icon" aria-hidden="true"><svg viewBox="0 0 64 64"><rect x="6" y="6" width="52" height="52" rx="8" fill="#2b4b8c" /><rect x="12" y="12" width="40" height="40" rx="4" fill="#0d1e45" /><rect x="30" y="24" width="8" height="8" rx="2" fill="#3a5fa8" /><circle cx="20" cy="44" r="6" fill="#030a1c" stroke="#f0505e" stroke-width="2.5"/><circle cx="44" cy="18" r="6" fill="#f0505e" /><path d="M44 28 L 44 40" fill="none" stroke="#ffffff" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" stroke-dasharray="3 3"/></svg></span><span class="num">02</span></div>
       <h2>Tilt Sort</h2>
       <p>One swipe rolls every marble at once. Get each one into its hole.</p>
       <span class="prog" data-prog="tilt">Not played yet</span>
     </a>
     <a class="card" href="./flood/" data-id="flood" style="--c:#5ab8f0">
-      <span class="num">03</span>
+      <div class="top"><span class="icon" aria-hidden="true"><svg viewBox="0 0 64 64"><rect x="8" y="8" width="16" height="16" rx="2" fill="#358553" /><rect x="24" y="8" width="16" height="16" rx="2" fill="#2f7a4a" /><rect x="40" y="8" width="16" height="16" rx="2" fill="#358553" /><rect x="8" y="24" width="16" height="16" rx="2" fill="#2f7a4a" /><rect x="24" y="24" width="16" height="16" rx="2" fill="#358553" /><rect x="40" y="24" width="16" height="16" rx="2" fill="#2f7a4a" /><rect x="8" y="40" width="16" height="16" rx="2" fill="#358553" /><rect x="24" y="40" width="16" height="16" rx="2" fill="#2f7a4a" /><rect x="40" y="40" width="16" height="16" rx="2" fill="#358553" /><circle cx="24" cy="22" r="6" fill="#ff9a3c" /><circle cx="21.5" cy="21" r="1.6" fill="#ffffff" /><circle cx="26.5" cy="21" r="1.6" fill="#ffffff" /><circle cx="40" cy="38" r="6" fill="#f8a3c6" /><circle cx="37.5" cy="37" r="1.6" fill="#ffffff" /><circle cx="42.5" cy="37" r="1.6" fill="#ffffff" /><path d="M8 46 Q 16 42 24 46 T 40 46 T 56 46 L 56 56 L 8 56 Z" fill="#4096eb" opacity=".8"/></svg></span><span class="num">03</span></div>
       <h2>Flood Rescue</h2>
       <p>Free the animals one by one before the water reaches them.</p>
       <span class="prog" data-prog="flood">Not played yet</span>
     </a>
     <a class="card" href="./rail/" data-id="rail" style="--c:#ff9a3c">
-      <span class="num">04</span>
+      <div class="top"><span class="icon" aria-hidden="true"><svg viewBox="0 0 64 64"><path d="M32 6 L 32 26 L 14 54" fill="none" stroke="#c9d6ff" stroke-width="4" stroke-linecap="round" stroke-linejoin="round" /><path d="M32 26 L 50 54" fill="none" stroke="#c9d6ff" stroke-width="4" stroke-linecap="round" stroke-linejoin="round" opacity=".3"/><circle cx="32" cy="26" r="7" fill="#ffd54a" /><rect x="8" y="52" width="14" height="6" rx="2" fill="#f0505e" /><rect x="44" y="52" width="14" height="6" rx="2" fill="#4f8ef2" /><rect x="27" y="8" width="10" height="14" rx="3" fill="#f0505e" /></svg></span><span class="num">04</span></div>
       <h2>Switch Rail</h2>
       <p>Flip the switches so every wagon reaches its station. It keeps speeding up.</p>
       <span class="prog" data-prog="rail">Not played yet</span>
     </a>
     <a class="card" href="./gate/" data-id="gate" style="--c:#a06ee2">
-      <span class="num">05</span>
+      <div class="top"><span class="icon" aria-hidden="true"><svg viewBox="0 0 64 64"><rect x="8" y="6" width="14" height="44" rx="2" fill="rgba(255,255,255,.08)" /><rect x="25" y="6" width="14" height="44" rx="2" fill="rgba(255,255,255,.14)" /><rect x="42" y="6" width="14" height="44" rx="2" fill="rgba(255,255,255,.08)" /><path d="M10 22 L 20 16" fill="none" stroke="#c9d6ff" stroke-width="3" stroke-linecap="round" stroke-linejoin="round" /><path d="M27 34 L 37 40" fill="none" stroke="#c9d6ff" stroke-width="3" stroke-linecap="round" stroke-linejoin="round" /><circle cx="32" cy="14" r="5" fill="#a06ee2" /><rect x="8" y="50" width="14" height="8" rx="3" fill="#f0505e" /><rect x="25" y="50" width="14" height="8" rx="3" fill="#a06ee2" /><rect x="42" y="50" width="14" height="8" rx="3" fill="#ffd54a" /></svg></span><span class="num">05</span></div>
       <h2>Gate Drop</h2>
       <p>Drop marbles through flippers that switch sides, into the right cups.</p>
       <span class="prog" data-prog="gate">Not played yet</span>
     </a>
     <a class="card" href="./mix/" data-id="mix" style="--c:#f8a3c6">
-      <span class="num">06</span>
+      <div class="top"><span class="icon" aria-hidden="true"><svg viewBox="0 0 64 64"><circle cx="22" cy="24" r="12" fill="#f0505e" opacity=".85"/><circle cx="42" cy="24" r="12" fill="#ffd54a" opacity=".85"/><circle cx="32" cy="42" r="12" fill="#4f8ef2" opacity=".85"/><circle cx="32" cy="30" r="5" fill="#ff9a3c" /></svg></span><span class="num">06</span></div>
       <h2>Mix Lab</h2>
       <p>Mix red, yellow, blue and white to match each order.</p>
       <span class="prog" data-prog="mix">Not played yet</span>
     </a>
     <a class="card" href="./blast/" data-id="blast" style="--c:#5acb74">
-      <span class="num">07</span>
+      <div class="top"><span class="icon" aria-hidden="true"><svg viewBox="0 0 64 64"><rect x="10" y="10" width="9" height="9" rx="2" fill="rgba(255,255,255,.1)" /><rect x="21" y="10" width="9" height="9" rx="2" fill="rgba(255,255,255,.1)" /><rect x="32" y="10" width="9" height="9" rx="2" fill="rgba(255,255,255,.1)" /><rect x="43" y="10" width="9" height="9" rx="2" fill="rgba(255,255,255,.1)" /><rect x="10" y="21" width="9" height="9" rx="2" fill="rgba(255,255,255,.1)" /><rect x="21" y="21" width="9" height="9" rx="2" fill="#ff9a3c" /><rect x="32" y="21" width="9" height="9" rx="2" fill="rgba(255,255,255,.1)" /><rect x="43" y="21" width="9" height="9" rx="2" fill="rgba(255,255,255,.1)" /><rect x="10" y="32" width="9" height="9" rx="2" fill="#5acb74" /><rect x="21" y="32" width="9" height="9" rx="2" fill="#ffd54a" /><rect x="32" y="32" width="9" height="9" rx="2" fill="#f0505e" /><rect x="43" y="32" width="9" height="9" rx="2" fill="#4f8ef2" /><rect x="10" y="43" width="9" height="9" rx="2" fill="#ffd54a" /><rect x="21" y="43" width="9" height="9" rx="2" fill="#f0505e" /><rect x="32" y="43" width="9" height="9" rx="2" fill="#4f8ef2" /><rect x="43" y="43" width="9" height="9" rx="2" fill="#5acb74" /><path d="M50 14 L 50 30 M45 25 L 50 30 L 55 25" fill="none" stroke="#ffffff" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" /></svg></span><span class="num">07</span></div>
       <h2>Blast Cascade</h2>
       <p>A block puzzle where cleared rows make everything above fall for combos.</p>
       <span class="prog" data-prog="blast">Not played yet</span>
     </a>
     <a class="card" href="./tower/" data-id="tower" style="--c:#ff7a59">
-      <span class="num">08</span>
+      <div class="top"><span class="icon" aria-hidden="true"><svg viewBox="0 0 64 64"><rect x="8" y="48" width="15" height="10" rx="2" fill="#f0505e" /><rect x="24" y="48" width="15" height="10" rx="2" fill="#5b6a8f" /><rect x="40" y="48" width="15" height="10" rx="2" fill="#4f8ef2" /><rect x="16" y="37" width="15" height="10" rx="2" fill="#5b6a8f" /><rect x="32" y="37" width="15" height="10" rx="2" fill="#4f8ef2" /><rect x="8" y="26" width="15" height="10" rx="2" fill="#4f8ef2" /><rect x="24" y="26" width="15" height="10" rx="2" fill="rgba(255,255,255,.1)" /><rect x="40" y="26" width="15" height="10" rx="2" fill="#f0505e" /><rect x="16" y="15" width="15" height="10" rx="2" fill="#5b6a8f" /><rect x="32" y="15" width="15" height="10" rx="2" fill="#f0505e" /><rect x="34" y="14" width="15" height="10" rx="2" fill="#ffd54a" transform="rotate(-12 41 19)"/></svg></span><span class="num">08</span></div>
       <h2>Pull Tower</h2>
       <p>Pull coloured bricks without bringing the tower down.</p>
       <span class="prog" data-prog="tower">Not played yet</span>
     </a>
     <a class="card" href="./sand/" data-id="sand" style="--c:#e6c15a">
-      <span class="num">09</span>
+      <div class="top"><span class="icon" aria-hidden="true"><svg viewBox="0 0 64 64"><path d="M18 6 L 46 6 L 36 18 L 28 18 Z" fill="none" stroke="#c9d6ff" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" /><path d="M32 18 L 32 34" fill="none" stroke="#ffd54a" stroke-width="3" stroke-linecap="round" stroke-linejoin="round" /><path d="M22 26 L 42 38" fill="none" stroke="#c9d6ff" stroke-width="3.5" stroke-linecap="round" stroke-linejoin="round" /><path d="M14 40 L 14 58 L 28 58 L 28 40" fill="none" stroke="#c9d6ff" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" /><path d="M36 40 L 36 58 L 50 58 L 50 40" fill="none" stroke="#c9d6ff" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" /><rect x="16" y="48" width="10" height="9" rx="1" fill="#ffd54a" /><rect x="38" y="52" width="10" height="5" rx="1" fill="#4f8ef2" /></svg></span><span class="num">09</span></div>
       <h2>Sand Jars</h2>
       <p>Flip the ramps so pouring sand lands in the jar of its colour.</p>
       <span class="prog" data-prog="sand">Not played yet</span>
     </a>
     <a class="card" href="./mosaic/" data-id="mosaic" style="--c:#e6cf7a">
-      <span class="num">10</span>
+      <div class="top"><span class="icon" aria-hidden="true"><svg viewBox="0 0 64 64"><rect x="8" y="8" width="48" height="48" rx="4" fill="#e9a46b" /><rect x="8" y="8" width="24" height="24" rx="4" fill="#7fb7a6" /><rect x="32" y="32" width="24" height="24" rx="4" fill="#8fa6d8" /><rect x="32" y="8" width="24" height="24" rx="4" fill="#d97a7a" /><path d="M20 14 L22.5 18.5 L27 20 L22.5 21.5 L20 26 L17.5 21.5 L13 20 L17.5 18.5 Z" fill="#ffd54a"/><path d="M44 38 L46.5 42.5 L51 44 L46.5 45.5 L44 50 L41.5 45.5 L37 44 L41.5 42.5 Z" fill="#ffd54a"/></svg></span><span class="num">10</span></div>
       <h2>Mosaic</h2>
       <p>One gold tile in every row, column and colour area. None may touch.</p>
       <span class="prog" data-prog="mosaic">Not played yet</span>
     </a>
     <a class="card" href="./topple/" data-id="topple" style="--c:#f6efdd">
-      <span class="num">11</span>
+      <div class="top"><span class="icon" aria-hidden="true"><svg viewBox="0 0 64 64"><rect x="10" y="22" width="8" height="26" rx="2" fill="#f6efdd" /><rect x="24" y="22" width="8" height="26" rx="2" fill="#f6efdd" transform="rotate(25 28 48)"/><rect x="36" y="40" width="26" height="10" rx="2" fill="#f0505e" /><rect x="36" y="30" width="8" height="8" rx="2" fill="#f8a3c6" /><circle cx="14" cy="30" r="1.5" fill="#3a3550" /><circle cx="14" cy="40" r="1.5" fill="#3a3550" /></svg></span><span class="num">11</span></div>
       <h2>Topple</h2>
       <p>Fill the gaps, push the first domino, and watch them reveal a picture.</p>
       <span class="prog" data-prog="topple">Not played yet</span>
     </a>
     <a class="card" href="./pipes/" data-id="pipes" style="--c:#5ab8f0">
-      <span class="num">12</span>
+      <div class="top"><span class="icon" aria-hidden="true"><svg viewBox="0 0 64 64"><rect x="6" y="6" width="52" height="52" rx="6" fill="#132a5a" /><path d="M12 32 L 32 32 L 32 52" fill="none" stroke="#5ab8f0" stroke-width="7" stroke-linecap="round" stroke-linejoin="round" /><path d="M32 32 L 32 14 L 50 14" fill="none" stroke="#6c7aa3" stroke-width="7" stroke-linecap="round" stroke-linejoin="round" /><circle cx="12" cy="32" r="6" fill="#ffd54a" /><circle cx="54" cy="14" r="3" fill="#f8a3c6" /><circle cx="51.22326763351316" cy="17.808361366362064" r="3" fill="#f8a3c6" /><circle cx="46.74819185160044" cy="16.329322598096326" r="3" fill="#f8a3c6" /><circle cx="46.78781653732108" cy="11.616331104768943" r="3" fill="#f8a3c6" /><circle cx="51.287128116998886" cy="10.212744897629564" r="3" fill="#f8a3c6" /></svg></span><span class="num">12</span></div>
       <h2>Pipe Spin</h2>
       <p>Turn the pipes so water from the tap reaches every flower.</p>
       <span class="prog" data-prog="pipes">Not played yet</span>
     </a>
     <a class="card" href="./floodit/" data-id="floodit" style="--c:#ff9a3c">
-      <span class="num">13</span>
+      <div class="top"><span class="icon" aria-hidden="true"><svg viewBox="0 0 64 64"><rect x="8" y="8" width="12" height="12" rx="2" fill="#ff9a3c" /><rect x="20" y="8" width="12" height="12" rx="2" fill="#ff9a3c" /><rect x="32" y="8" width="12" height="12" rx="2" fill="#ff9a3c" /><rect x="44" y="8" width="12" height="12" rx="2" fill="#4f8ef2" /><rect x="8" y="20" width="12" height="12" rx="2" fill="#ff9a3c" /><rect x="20" y="20" width="12" height="12" rx="2" fill="#ff9a3c" /><rect x="32" y="20" width="12" height="12" rx="2" fill="#ffd54a" /><rect x="44" y="20" width="12" height="12" rx="2" fill="#ffd54a" /><rect x="8" y="32" width="12" height="12" rx="2" fill="#ff9a3c" /><rect x="20" y="32" width="12" height="12" rx="2" fill="#5acb74" /><rect x="32" y="32" width="12" height="12" rx="2" fill="#5acb74" /><rect x="44" y="32" width="12" height="12" rx="2" fill="#5acb74" /><rect x="8" y="44" width="12" height="12" rx="2" fill="#4f8ef2" /><rect x="20" y="44" width="12" height="12" rx="2" fill="#4f8ef2" /><rect x="32" y="44" width="12" height="12" rx="2" fill="#4f8ef2" /><rect x="44" y="44" width="12" height="12" rx="2" fill="#4f8ef2" /><rect x="8" y="8" width="12" height="12" rx="0" fill="none" stroke="#ffffff" stroke-width="2"/></svg></span><span class="num">13</span></div>
       <h2>Color Flood</h2>
       <p>Grow your colour from the corner until it fills the whole board.</p>
       <span class="prog" data-prog="floodit">Not played yet</span>
     </a>
     <a class="card" href="./lights/" data-id="lights" style="--c:#ffd54a">
-      <span class="num">14</span>
+      <div class="top"><span class="icon" aria-hidden="true"><svg viewBox="0 0 64 64"><rect x="10" y="10" width="12" height="12" rx="2" fill="#1b2a52" /><rect x="25" y="10" width="12" height="12" rx="2" fill="#1b2a52" /><rect x="40" y="10" width="12" height="12" rx="2" fill="#1b2a52" /><rect x="10" y="25" width="12" height="12" rx="2" fill="#1b2a52" /><rect x="25" y="25" width="12" height="12" rx="2" fill="#1b2a52" /><rect x="40" y="25" width="12" height="12" rx="2" fill="#1b2a52" /><rect x="10" y="40" width="12" height="12" rx="2" fill="#1b2a52" /><rect x="25" y="40" width="12" height="12" rx="2" fill="#1b2a52" /><rect x="40" y="40" width="12" height="12" rx="2" fill="#1b2a52" /><circle cx="32" cy="17" r="5" fill="#ffe17a" /><circle cx="17" cy="32" r="5" fill="#ffe17a" /><circle cx="47" cy="47" r="5" fill="#ffe17a" /><circle cx="32" cy="32" r="5" fill="#2a3a66" /></svg></span><span class="num">14</span></div>
       <h2>Lights Off</h2>
       <p>Each tap switches a lamp and its neighbours. Turn them all off.</p>
       <span class="prog" data-prog="lights">Not played yet</span>
     </a>
     <a class="card" href="./merge/" data-id="merge" style="--c:#a06ee2">
-      <span class="num">15</span>
+      <div class="top"><span class="icon" aria-hidden="true"><svg viewBox="0 0 64 64"><rect x="10" y="34" width="20" height="20" rx="4" fill="#4f8ef2" /><text x="20" y="44" fill="#ffffff" font-family="Lilita One, Arial Rounded MT Bold, sans-serif" font-size="13" text-anchor="middle" dominant-baseline="central">2</text><rect x="34" y="34" width="20" height="20" rx="4" fill="#4f8ef2" /><text x="44" y="44" fill="#ffffff" font-family="Lilita One, Arial Rounded MT Bold, sans-serif" font-size="13" text-anchor="middle" dominant-baseline="central">2</text><path d="M24 28 L 32 18 L 40 28" fill="none" stroke="#ffffff" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" /><rect x="24" y="4" width="16" height="14" rx="4" fill="#5acb74" /><text x="32" y="11" fill="#ffffff" font-family="Lilita One, Arial Rounded MT Bold, sans-serif" font-size="11" text-anchor="middle" dominant-baseline="central">4</text></svg></span><span class="num">15</span></div>
       <h2>Merge Drop</h2>
       <p>Drop numbers into columns. Twins merge and chain into bigger numbers.</p>
       <span class="prog" data-prog="merge">Not played yet</span>
     </a>
     <a class="card" href="./tubes/" data-id="tubes" style="--c:#8adaf8">
-      <span class="num">16</span>
+      <div class="top"><span class="icon" aria-hidden="true"><svg viewBox="0 0 64 64"><path d="M12 8 L 12 52 Q 16 58 20 52 L 20 8" fill="none" stroke="#c9d6ff" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" /><circle cx="16" cy="48" r="4" fill="#f0505e" /><circle cx="16" cy="38" r="4" fill="#4f8ef2" /><circle cx="16" cy="28" r="4" fill="#f0505e" /><path d="M30 8 L 30 52 Q 34 58 38 52 L 38 8" fill="none" stroke="#c9d6ff" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" /><circle cx="34" cy="48" r="4" fill="#4f8ef2" /><circle cx="34" cy="38" r="4" fill="#f0505e" /><circle cx="34" cy="28" r="4" fill="#4f8ef2" /><path d="M48 8 L 48 52 Q 52 58 56 52 L 56 8" fill="none" stroke="#c9d6ff" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" /><circle cx="52" cy="48" r="4" fill="#ffd54a" /><circle cx="52" cy="38" r="4" fill="#ffd54a" /><circle cx="52" cy="28" r="4" fill="#ffd54a" /></svg></span><span class="num">16</span></div>
       <h2>Tube Sort</h2>
       <p>Move balls between tubes until every tube holds one colour.</p>
       <span class="prog" data-prog="tubes">Not played yet</span>
     </a>
     <a class="card" href="./pop/" data-id="pop" style="--c:#f0505e">
-      <span class="num">17</span>
+      <div class="top"><span class="icon" aria-hidden="true"><svg viewBox="0 0 64 64"><circle cx="16" cy="20" r="5.5" fill="#f0505e" /><circle cx="28" cy="20" r="5.5" fill="#f0505e" /><circle cx="40" cy="20" r="5.5" fill="#4f8ef2" /><circle cx="16" cy="32" r="5.5" fill="#4f8ef2" /><circle cx="28" cy="32" r="5.5" fill="#f0505e" /><circle cx="40" cy="32" r="5.5" fill="#ffd54a" /><circle cx="52" cy="32" r="5.5" fill="#4f8ef2" /><circle cx="16" cy="44" r="5.5" fill="#ffd54a" /><circle cx="28" cy="44" r="5.5" fill="#4f8ef2" /><circle cx="40" cy="44" r="5.5" fill="#4f8ef2" /><circle cx="52" cy="44" r="5.5" fill="#f0505e" /><circle cx="22" cy="20" r="11" fill="none" stroke="#ffffff" stroke-width="2" stroke-dasharray="3 3"/></svg></span><span class="num">17</span></div>
       <h2>Pop Groups</h2>
       <p>Pop groups of the same colour. Bigger groups clear the board faster.</p>
       <span class="prog" data-prog="pop">Not played yet</span>
     </a>
     <a class="card" href="./stack/" data-id="stack" style="--c:#5acb74">
-      <span class="num">18</span>
+      <div class="top"><span class="icon" aria-hidden="true"><svg viewBox="0 0 64 64"><rect x="14" y="46" width="36" height="9" rx="2" fill="#f0505e" /><rect x="16" y="36" width="34" height="9" rx="2" fill="#ff9a3c" /><rect x="18" y="26" width="32" height="9" rx="2" fill="#ffd54a" /><rect x="26" y="14" width="32" height="9" rx="2" fill="#5acb74" /><path d="M10 18 L 20 18" fill="none" stroke="#ffffff" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" opacity=".6"/></svg></span><span class="num">18</span></div>
       <h2>Stack Up</h2>
       <p>Tap at the right moment to stack blocks into a tall tower.</p>
       <span class="prog" data-prog="stack">Not played yet</span>
     </a>
     <a class="card" href="./slide/" data-id="slide" style="--c:#4f8ef2">
-      <span class="num">19</span>
+      <div class="top"><span class="icon" aria-hidden="true"><svg viewBox="0 0 64 64"><rect x="10" y="10" width="13" height="13" rx="2" fill="hsl(10,70%,55%)" /><rect x="25" y="10" width="13" height="13" rx="2" fill="hsl(10,70%,61%)" /><rect x="40" y="10" width="13" height="13" rx="2" fill="hsl(10,70%,67%)" /><rect x="10" y="25" width="13" height="13" rx="2" fill="hsl(100,70%,55%)" /><rect x="25" y="25" width="13" height="13" rx="2" fill="hsl(100,70%,61%)" /><rect x="40" y="25" width="13" height="13" rx="2" fill="hsl(100,70%,67%)" /><rect x="10" y="40" width="13" height="13" rx="2" fill="hsl(190,70%,55%)" /><rect x="25" y="40" width="13" height="13" rx="2" fill="hsl(190,70%,61%)" /><rect x="40" y="40" width="13" height="13" rx="2" fill="rgba(255,255,255,.08)" /><text x="16.5" y="16.5" fill="#1b2a52" font-family="Lilita One, Arial Rounded MT Bold, sans-serif" font-size="10" text-anchor="middle" dominant-baseline="central">1</text><text x="31.5" y="16.5" fill="#1b2a52" font-family="Lilita One, Arial Rounded MT Bold, sans-serif" font-size="10" text-anchor="middle" dominant-baseline="central">2</text><text x="46.5" y="16.5" fill="#1b2a52" font-family="Lilita One, Arial Rounded MT Bold, sans-serif" font-size="10" text-anchor="middle" dominant-baseline="central">3</text><text x="16.5" y="31.5" fill="#1b2a52" font-family="Lilita One, Arial Rounded MT Bold, sans-serif" font-size="10" text-anchor="middle" dominant-baseline="central">4</text><text x="31.5" y="31.5" fill="#1b2a52" font-family="Lilita One, Arial Rounded MT Bold, sans-serif" font-size="10" text-anchor="middle" dominant-baseline="central">5</text><text x="46.5" y="31.5" fill="#1b2a52" font-family="Lilita One, Arial Rounded MT Bold, sans-serif" font-size="10" text-anchor="middle" dominant-baseline="central">6</text><text x="16.5" y="46.5" fill="#1b2a52" font-family="Lilita One, Arial Rounded MT Bold, sans-serif" font-size="10" text-anchor="middle" dominant-baseline="central">7</text><text x="31.5" y="46.5" fill="#1b2a52" font-family="Lilita One, Arial Rounded MT Bold, sans-serif" font-size="10" text-anchor="middle" dominant-baseline="central">8</text></svg></span><span class="num">19</span></div>
       <h2>Slide Puzzle</h2>
       <p>Slide the numbered tiles back into order.</p>
       <span class="prog" data-prog="slide">Not played yet</span>
     </a>
     <a class="card" href="./stroke/" data-id="stroke" style="--c:#c9a8ff">
-      <span class="num">20</span>
+      <div class="top"><span class="icon" aria-hidden="true"><svg viewBox="0 0 64 64"><rect x="10" y="10" width="12" height="12" rx="2" fill="#13295a" /><rect x="25" y="10" width="12" height="12" rx="2" fill="#13295a" /><rect x="40" y="10" width="12" height="12" rx="2" fill="#13295a" /><rect x="10" y="25" width="12" height="12" rx="2" fill="#13295a" /><rect x="25" y="25" width="12" height="12" rx="2" fill="#13295a" /><rect x="40" y="25" width="12" height="12" rx="2" fill="#13295a" /><rect x="10" y="40" width="12" height="12" rx="2" fill="#13295a" /><rect x="25" y="40" width="12" height="12" rx="2" fill="#13295a" /><rect x="40" y="40" width="12" height="12" rx="2" fill="#13295a" /><path d="M16 16 L 46 16 L 46 31 L 16 31 L 16 46 L 46 46" fill="none" stroke="#c9a8ff" stroke-width="5" stroke-linecap="round" stroke-linejoin="round" /><circle cx="16" cy="16" r="5" fill="#ffc83d" /></svg></span><span class="num">20</span></div>
       <h2>One Stroke</h2>
       <p>Draw one line through every square without crossing itself.</p>
       <span class="prog" data-prog="stroke">Not played yet</span>
     </a>
     <a class="card" href="./dots/" data-id="dots" style="--c:#5acb74">
-      <span class="num">21</span>
+      <div class="top"><span class="icon" aria-hidden="true"><svg viewBox="0 0 64 64"><rect x="6" y="6" width="52" height="52" rx="6" fill="#132a5a" /><path d="M16 16 L 16 44 L 30 44" fill="none" stroke="#5acb74" stroke-width="5" stroke-linecap="round" stroke-linejoin="round" /><path d="M48 16 L 32 16 L 32 30 L 48 30" fill="none" stroke="#4f8ef2" stroke-width="5" stroke-linecap="round" stroke-linejoin="round" /><circle cx="16" cy="16" r="5" fill="#5acb74" /><circle cx="30" cy="44" r="5" fill="#5acb74" /><circle cx="48" cy="16" r="5" fill="#4f8ef2" /><circle cx="48" cy="30" r="5" fill="#4f8ef2" /><circle cx="48" cy="48" r="5" fill="#f0505e" /></svg></span><span class="num">21</span></div>
       <h2>Dot Link</h2>
       <p>Link each pair of same-colour dots. Lines may not cross.</p>
       <span class="prog" data-prog="dots">Not played yet</span>
     </a>
     <a class="card" href="./nono/" data-id="nono" style="--c:#ff9a3c">
-      <span class="num">22</span>
+      <div class="top"><span class="icon" aria-hidden="true"><svg viewBox="0 0 64 64"><text x="10" y="30" fill="#ffffff" font-family="Lilita One, Arial Rounded MT Bold, sans-serif" font-size="10" text-anchor="middle" dominant-baseline="central">2</text><text x="10" y="42" fill="#ffffff" font-family="Lilita One, Arial Rounded MT Bold, sans-serif" font-size="10" text-anchor="middle" dominant-baseline="central">1</text><text x="26" y="12" fill="#ffffff" font-family="Lilita One, Arial Rounded MT Bold, sans-serif" font-size="10" text-anchor="middle" dominant-baseline="central">3</text><text x="38" y="12" fill="#ffffff" font-family="Lilita One, Arial Rounded MT Bold, sans-serif" font-size="10" text-anchor="middle" dominant-baseline="central">1</text><rect x="18" y="20" width="40" height="36" rx="2" fill="#dfe5f7" /><rect x="20" y="24" width="10" height="10" rx="1" fill="#1b2a52" /><rect x="31" y="24" width="10" height="10" rx="1" fill="#1b2a52" /><rect x="20" y="36" width="10" height="10" rx="1" fill="#1b2a52" /><rect x="31" y="48" width="0" height="0" rx="3" fill="#1b2a52" /><rect x="42" y="36" width="10" height="10" rx="1" fill="#1b2a52" /></svg></span><span class="num">22</span></div>
       <h2>Picture Logic</h2>
       <p>Use the number clues to fill the right squares and reveal a picture.</p>
       <span class="prog" data-prog="nono">Not played yet</span>
     </a>
     <a class="card" href="./mines/" data-id="mines" style="--c:#46a865">
-      <span class="num">23</span>
+      <div class="top"><span class="icon" aria-hidden="true"><svg viewBox="0 0 64 64"><rect x="10" y="10" width="14" height="14" rx="2" fill="#efdcbb" /><rect x="25" y="10" width="14" height="14" rx="2" fill="#efdcbb" /><rect x="40" y="10" width="14" height="14" rx="2" fill="#efdcbb" /><rect x="10" y="25" width="14" height="14" rx="2" fill="#efdcbb" /><rect x="25" y="25" width="14" height="14" rx="2" fill="#efdcbb" /><rect x="40" y="25" width="14" height="14" rx="2" fill="#46a865" /><rect x="10" y="40" width="14" height="14" rx="2" fill="#efdcbb" /><rect x="25" y="40" width="14" height="14" rx="2" fill="#46a865" /><rect x="40" y="40" width="14" height="14" rx="2" fill="#46a865" /><text x="17" y="17" fill="#4f8ef2" font-family="Lilita One, Arial Rounded MT Bold, sans-serif" font-size="11" text-anchor="middle" dominant-baseline="central">1</text><text x="32" y="17" fill="#5acb74" font-family="Lilita One, Arial Rounded MT Bold, sans-serif" font-size="11" text-anchor="middle" dominant-baseline="central">2</text><text x="17" y="32" fill="#4f8ef2" font-family="Lilita One, Arial Rounded MT Bold, sans-serif" font-size="11" text-anchor="middle" dominant-baseline="central">1</text><path d="M48 40 L 48 54" fill="none" stroke="#1b1530" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" /><path d="M48 40 L 56 44 L 48 48 Z" fill="#f0505e"/></svg></span><span class="num">23</span></div>
       <h2>Safe Steps</h2>
       <p>Open every safe square. The numbers tell how many mines are next to you.</p>
       <span class="prog" data-prog="mines">Not played yet</span>
     </a>
     <a class="card" href="./snake/" data-id="snake" style="--c:#ffd54a">
-      <span class="num">24</span>
+      <div class="top"><span class="icon" aria-hidden="true"><svg viewBox="0 0 64 64"><rect x="6" y="6" width="52" height="52" rx="6" fill="#2f7a4a" /><path d="M14 46 L 14 30 L 34 30 L 34 18 L 44 18" fill="none" stroke="#ffd54a" stroke-width="8" stroke-linecap="round" stroke-linejoin="round" /><circle cx="44" cy="18" r="5" fill="#ff9a3c" /><circle cx="42.5" cy="17" r="1.6" fill="#ffffff" /><circle cx="47.5" cy="17" r="1.6" fill="#ffffff" /><circle cx="48" cy="44" r="5" fill="#f0505e" /><rect x="47" y="36" width="2" height="4" rx="1" fill="#5acb74" /></svg></span><span class="num">24</span></div>
       <h2>Snake Bites</h2>
       <p>Steer the snake to eat apples without hitting walls, rocks or your tail.</p>
       <span class="prog" data-prog="snake">Not played yet</span>
     </a>
     <a class="card" href="./echo/" data-id="echo" style="--c:#a06ee2">
-      <span class="num">25</span>
+      <div class="top"><span class="icon" aria-hidden="true"><svg viewBox="0 0 64 64"><path d="M32 32 L 32 8 A 24 24 0 0 1 56 32 Z" fill="#f0505e"/><path d="M32 32 L 56 32 A 24 24 0 0 1 32 56 Z" fill="#4f8ef2" opacity=".45"/><path d="M32 32 L 32 56 A 24 24 0 0 1 8 32 Z" fill="#ffd54a" opacity=".45"/><path d="M32 32 L 8 32 A 24 24 0 0 1 32 8 Z" fill="#5acb74" opacity=".45"/><circle cx="32" cy="32" r="8" fill="#102350" /></svg></span><span class="num">25</span></div>
       <h2>Echo</h2>
       <p>Watch the pads light up, then repeat the sequence. It gets longer.</p>
       <span class="prog" data-prog="echo">Not played yet</span>
     </a>
     <a class="card" href="./sudoku/" data-id="sudoku" style="--c:#4f8ef2">
-      <span class="num">26</span>
+      <div class="top"><span class="icon" aria-hidden="true"><svg viewBox="0 0 64 64"><rect x="8" y="8" width="48" height="48" rx="3" fill="#f5f7ff" /><path d="M32 8 L 32 56 M8 32 L 56 32" fill="none" stroke="#1b2a52" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" /><path d="M20 8 L 20 56 M44 8 L 44 56 M8 20 L 56 20 M8 44 L 56 44" fill="none" stroke="#9aa6c8" stroke-width="1" stroke-linecap="round" stroke-linejoin="round" /><text x="14" y="14" fill="#1b2a52" font-family="Lilita One, Arial Rounded MT Bold, sans-serif" font-size="10" text-anchor="middle" dominant-baseline="central">1</text><text x="38" y="26" fill="#1b2a52" font-family="Lilita One, Arial Rounded MT Bold, sans-serif" font-size="10" text-anchor="middle" dominant-baseline="central">3</text><text x="26" y="38" fill="#2c5fb8" font-family="Lilita One, Arial Rounded MT Bold, sans-serif" font-size="10" text-anchor="middle" dominant-baseline="central">2</text><text x="50" y="50" fill="#1b2a52" font-family="Lilita One, Arial Rounded MT Bold, sans-serif" font-size="10" text-anchor="middle" dominant-baseline="central">4</text><rect x="8" y="44" width="12" height="12" rx="0" fill="#ffd54a" opacity=".7"/></svg></span><span class="num">26</span></div>
       <h2>Mini Sudoku</h2>
       <p>Small sudokus: every number once in each row, column and box.</p>
       <span class="prog" data-prog="sudoku">Not played yet</span>
     </a>
     <a class="card" href="./swipe/" data-id="swipe" style="--c:#edc53f">
-      <span class="num">27</span>
+      <div class="top"><span class="icon" aria-hidden="true"><svg viewBox="0 0 64 64"><rect x="6" y="6" width="52" height="52" rx="6" fill="#bbada0" /><rect x="10" y="10" width="21" height="21" rx="3" fill="#eee4da" /><text x="20.5" y="20.5" fill="#776e65" font-family="Lilita One, Arial Rounded MT Bold, sans-serif" font-size="13" text-anchor="middle" dominant-baseline="central">2</text><rect x="33" y="10" width="21" height="21" rx="3" fill="#f2b179" /><text x="43.5" y="20.5" fill="#ffffff" font-family="Lilita One, Arial Rounded MT Bold, sans-serif" font-size="13" text-anchor="middle" dominant-baseline="central">8</text><rect x="10" y="33" width="21" height="21" rx="3" fill="#f65e3b" /><text x="20.5" y="43.5" fill="#ffffff" font-family="Lilita One, Arial Rounded MT Bold, sans-serif" font-size="11" text-anchor="middle" dominant-baseline="central">64</text><rect x="33" y="33" width="21" height="21" rx="3" fill="#edc53f" /><text x="43.5" y="43.5" fill="#ffffff" font-family="Lilita One, Arial Rounded MT Bold, sans-serif" font-size="9" text-anchor="middle" dominant-baseline="central">512</text></svg></span><span class="num">27</span></div>
       <h2>Number Swipe</h2>
       <p>Swipe tiles; equal numbers merge. Make the target tile.</p>
       <span class="prog" data-prog="swipe">Not played yet</span>
     </a>
     <a class="card" href="./brick/" data-id="brick" style="--c:#f0505e">
-      <span class="num">28</span>
+      <div class="top"><span class="icon" aria-hidden="true"><svg viewBox="0 0 64 64"><rect x="8" y="8" width="11" height="5.5" rx="1.5" fill="#f0505e" /><rect x="20.5" y="8" width="11" height="5.5" rx="1.5" fill="#f0505e" /><rect x="33" y="8" width="11" height="5.5" rx="1.5" fill="#f0505e" /><rect x="45.5" y="8" width="11" height="5.5" rx="1.5" fill="#f0505e" /><rect x="8" y="15" width="11" height="5.5" rx="1.5" fill="#ff9a3c" /><rect x="20.5" y="15" width="11" height="5.5" rx="1.5" fill="#ff9a3c" /><rect x="33" y="15" width="11" height="5.5" rx="1.5" fill="#ff9a3c" /><rect x="45.5" y="15" width="11" height="5.5" rx="1.5" fill="#ff9a3c" /><rect x="8" y="22" width="11" height="5.5" rx="1.5" fill="#ffd54a" /><rect x="20.5" y="22" width="11" height="5.5" rx="1.5" fill="#ffd54a" /><rect x="33" y="22" width="11" height="5.5" rx="1.5" fill="#ffd54a" /><rect x="45.5" y="22" width="11" height="5.5" rx="1.5" fill="#ffd54a" /><circle cx="36" cy="40" r="3.5" fill="#ffffff" /><rect x="22" y="52" width="22" height="5" rx="2.5" fill="#c9d6ff" /><path d="M36 40 L 46 30" fill="none" stroke="#ffffff" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" stroke-dasharray="2 3"/></svg></span><span class="num">28</span></div>
       <h2>Brick Bash</h2>
       <p>Bounce the ball with your paddle and break every brick.</p>
       <span class="prog" data-prog="brick">Not played yet</span>
     </a>
     <a class="card" href="./gems/" data-id="gems" style="--c:#c9a8ff">
-      <span class="num">29</span>
+      <div class="top"><span class="icon" aria-hidden="true"><svg viewBox="0 0 64 64"><polygon points="16.0,11.5 22.5,18.0 16.0,24.5 9.5,18.0 " fill="#f0505e"/><polygon points="32.0,11.5 38.2,16.0 35.8,23.3 28.2,23.3 25.8,16.0 " fill="#4f8ef2"/><polygon points="48.0,11.5 54.5,18.0 48.0,24.5 41.5,18.0 " fill="#f0505e"/><polygon points="16.0,27.5 21.6,30.8 21.6,37.3 16.0,40.5 10.4,37.3 10.4,30.8 " fill="#5acb74"/><polygon points="32.0,27.5 38.5,34.0 32.0,40.5 25.5,34.0 " fill="#f0505e"/><polygon points="48.0,27.5 54.2,32.0 51.8,39.3 44.2,39.3 41.8,32.0 " fill="#ffd54a"/><polygon points="16.0,43.5 22.2,48.0 19.8,55.3 12.2,55.3 9.8,48.0 " fill="#4f8ef2"/><polygon points="32.0,43.5 37.6,46.8 37.6,53.3 32.0,56.5 26.4,53.3 26.4,46.8 " fill="#5acb74"/><polygon points="48.0,43.5 54.5,50.0 48.0,56.5 41.5,50.0 " fill="#a06ee2"/><path d="M32 34 L 32 18" fill="none" stroke="#ffffff" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" opacity=".7"/></svg></span><span class="num">29</span></div>
       <h2>Gem Swap</h2>
       <p>Swap gems to make lines of three and collect the goal before moves run out.</p>
       <span class="prog" data-prog="gems">Not played yet</span>
     </a>
     <a class="card" href="./tap/" data-id="tap" style="--c:#ffc83d">
-      <span class="num">30</span>
+      <div class="top"><span class="icon" aria-hidden="true"><svg viewBox="0 0 64 64"><circle cx="22" cy="22" r="10" fill="#5acb74" /><circle cx="22" cy="22" r="13" fill="none" stroke="#ffffff" stroke-width="2"/><circle cx="44" cy="40" r="8" fill="#4f8ef2" /><circle cx="18" cy="46" r="7" fill="#1b1530" stroke="#f0505e" stroke-width="2"/><path d="M22 40 L 26 34" fill="none" stroke="#ffd54a" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" /></svg></span><span class="num">30</span></div>
       <h2>Tap Rush</h2>
       <p>Tap the circles before they vanish, and never the bombs.</p>
       <span class="prog" data-prog="tap">Not played yet</span>
