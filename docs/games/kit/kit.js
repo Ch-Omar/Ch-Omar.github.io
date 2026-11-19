@@ -133,12 +133,25 @@ function start(def) {
   function hideSheet() { sheet.classList.remove('open'); }
   function openSheet(html) { sheetIn.innerHTML = html; requestAnimationFrame(() => sheet.classList.add('open')); }
 
+  // play stats: one record per attempt (win, lose, or quit when the player leaves it after a few seconds)
+  const Stats = window.GameStats;
+  let attempt = null;
+  function endAttempt(result, stars) {
+    if (!attempt || attempt.done) return;
+    attempt.done = true; attempt.t.stop();
+    const secs = attempt.t.secs();
+    if (Stats && (result !== 'quit' || secs >= 3)) Stats.record({ game: def.id, level: attempt.level, result, secs, tries, stars });
+  }
+  addEventListener('pagehide', () => endAttempt('quit'));
+
   function load(i, fresh) {
+    if (attempt && !attempt.done) endAttempt('quit');
     token++;
     if (game && game.destroy) try { game.destroy(); } catch (e) {}
     stage.innerHTML = ''; info.innerHTML = ''; hideSheet();
     if (fresh) tries = 1;
     li = i; ended = false; save.last = i; store(); renderHead();
+    attempt = Stats ? { level: i, t: Stats.timer(), done: false } : null;
     game = def.level(i, makeApi(token)) || {};
     if (def.tips && def.tips[i] && fresh) setTimeout(() => toast(def.tips[i], 3400), 350);
   }
@@ -178,6 +191,7 @@ function start(def) {
         if (ended || !alive()) return; ended = true;
         const stars = tries === 1 ? 3 : tries === 2 ? 2 : 1;
         save.stars[li] = Math.max(save.stars[li] || 0, stars); store(); renderHead();
+        endAttempt('win', stars);
         Snd.win(); vib([18, 40, 18]); confetti();
         const last = li === LEVELS - 1;
         setTimeout(() => {
@@ -191,7 +205,8 @@ function start(def) {
         }, 700);
       },
       lose(title, note) {
-        if (ended || !alive()) return; ended = true; tries++;
+        if (ended || !alive()) return; ended = true;
+        endAttempt('lose', 0); tries++;
         Snd.fail(); vib(70);
         setTimeout(() => {
           if (!alive()) return;

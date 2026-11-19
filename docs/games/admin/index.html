@@ -1,0 +1,138 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<meta name="robots" content="noindex,nofollow">
+<title>Games Stats</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Lilita+One&family=Nunito:wght@600;700;800&display=swap">
+<style>
+/* Admin dashboard: summary tiles, then one row per game, then the levels of the chosen game. */
+:root { --bg: #04152d; --panel: #0b2247; --panel-hi: #19376d; --primary: #576cbc; --text: #fff; --muted: #a9b7da; --good: #5acb74; --bad: #ff5468; --warn: #ffc83d; color-scheme: dark; }
+* { box-sizing: border-box; }
+[hidden] { display: none !important; }
+body { margin: 0; background: var(--bg); color: var(--text); font-family: "Nunito", system-ui, sans-serif; font-weight: 700; min-height: 100vh;
+  padding-left: max(16px, env(safe-area-inset-left, 0px)); padding-right: max(16px, env(safe-area-inset-right, 0px)); }
+.wrap { max-width: 1100px; margin: 0 auto; padding-block: 24px 48px; display: grid; gap: 20px; }
+header { display: flex; align-items: center; gap: 12px; flex-wrap: wrap; }
+h1 { font-family: "Lilita One", sans-serif; font-weight: 400; font-size: 34px; margin: 0; flex: 1; }
+h2 { font-family: "Lilita One", sans-serif; font-weight: 400; font-size: 22px; margin: 0 0 12px; }
+button, select { font: inherit; color: inherit; background: var(--panel-hi); border: 1px solid rgba(255,255,255,.15); border-radius: 12px; padding: 8px 14px; cursor: pointer; }
+button.primary { background: var(--primary); border-color: transparent; }
+button:focus-visible, select:focus-visible { outline: 3px solid var(--warn); outline-offset: 2px; }
+.card { background: var(--panel); border: 1px solid rgba(255,255,255,.1); border-radius: 18px; padding: 18px; min-width: 0; }
+.msg { color: var(--muted); line-height: 1.5; }
+.msg code { background: var(--panel-hi); padding: 2px 6px; border-radius: 6px; color: var(--text); user-select: all; word-break: break-all; }
+.tiles { display: grid; grid-template-columns: repeat(auto-fit, minmax(150px, 1fr)); gap: 12px; }
+.tile { background: var(--panel); border: 1px solid rgba(255,255,255,.1); border-radius: 16px; padding: 14px 16px; }
+.tile b { display: block; font-family: "Lilita One", sans-serif; font-weight: 400; font-size: 30px; font-variant-numeric: tabular-nums; }
+.tile span { color: var(--muted); font-size: 13px; text-transform: uppercase; letter-spacing: .08em; }
+.scroll { overflow-x: auto; }
+table { width: 100%; border-collapse: collapse; font-variant-numeric: tabular-nums; font-size: 15px; min-width: 640px; }
+th { color: var(--muted); font-size: 12px; text-transform: uppercase; letter-spacing: .08em; text-align: right; padding: 8px 10px; font-weight: 800; }
+th:first-child, td:first-child { text-align: left; }
+td { padding: 9px 10px; border-top: 1px solid rgba(255,255,255,.08); text-align: right; }
+tr.pick { cursor: pointer; }
+tr.pick:hover td, tr.on td { background: rgba(87,108,188,.18); }
+.bar { display: inline-flex; align-items: center; gap: 8px; justify-content: flex-end; }
+.bar i { display: block; width: 70px; height: 8px; border-radius: 999px; background: rgba(255,255,255,.1); overflow: hidden; }
+.bar i::after { content: ""; display: block; height: 100%; width: var(--w); background: var(--c, var(--good)); }
+.small { color: var(--muted); font-size: 13px; }
+</style>
+</head>
+<body>
+<div class="wrap">
+  <header>
+    <h1>Games Stats</h1>
+    <select id="range" aria-label="Time range"><option value="1">Last 24 hours</option><option value="7" selected>Last 7 days</option><option value="30">Last 30 days</option><option value="0">All time</option></select>
+    <button id="reload">Refresh</button>
+    <button id="out" hidden>Sign out</button>
+  </header>
+  <div class="card msg" id="gate">Loading…</div>
+  <div id="dash" hidden>
+    <div class="tiles" id="tiles"></div>
+    <div class="card" style="margin-top:20px"><h2>Per game</h2><div class="scroll"><table id="games"></table></div><p class="small">Tap a game to see its levels. "Quit" means the player left a level after 3 seconds or more without finishing it.</p></div>
+    <div class="card" style="margin-top:20px"><h2 id="lvTitle">Levels</h2><div class="scroll"><table id="levels"></table></div></div>
+    <div class="card" style="margin-top:20px"><h2>Latest plays</h2><div class="scroll"><table id="recent"></table></div></div>
+  </div>
+</div>
+<script src="../kit/firebase-config.js"></script>
+<script type="module">
+const SDK = 'https://www.gstatic.com/firebasejs/10.12.2/';
+const NAMES = { noodle: 'Noodle Out', tilt: 'Tilt Sort', flood: 'Flood Rescue', rail: 'Switch Rail', gate: 'Gate Drop', mix: 'Mix Lab', blast: 'Blast Cascade', tower: 'Pull Tower', sand: 'Sand Jars', mosaic: 'Mosaic', topple: 'Topple' };
+const $ = id => document.getElementById(id);
+const cfg = window.GAMES_FIREBASE;
+const gate = html => { $('gate').hidden = false; $('gate').innerHTML = html; $('dash').hidden = true; };
+const esc = s => String(s).replace(/[&<>"]/g, c => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;' }[c]));
+const fmtTime = s => { s = Math.round(s); const h = Math.floor(s / 3600), m = Math.floor((s % 3600) / 60), r = s % 60; return h ? `${h}h ${m}m` : m ? `${m}m ${r}s` : `${r}s`; };
+const pct = (a, b) => (b ? Math.round((a / b) * 100) : 0);
+const bar = (p, c) => `<span class="bar">${p}%<i style="--w:${p}%;${c ? '--c:' + c : ''}"></i></span>`;
+
+if (!cfg || !cfg.apiKey) {
+  gate('Stats are not connected yet. Put your Firebase web config in <code>games/kit/firebase-config.js</code>.');
+} else {
+  const [{ initializeApp }, A, F] = await Promise.all([import(SDK + 'firebase-app.js'), import(SDK + 'firebase-auth.js'), import(SDK + 'firebase-firestore.js')]);
+  const app = initializeApp(cfg), auth = A.getAuth(app), db = F.getFirestore(app);
+  let rows = [], pick = null;
+  $('out').addEventListener('click', () => A.signOut(auth));
+  $('reload').addEventListener('click', () => load());
+  $('range').addEventListener('change', () => render());
+  A.onAuthStateChanged(auth, user => {
+    $('out').hidden = !user;
+    if (!user) {
+      gate('Only the owner can see these stats. <br><br><button class="primary" id="signin">Sign in with Google</button>');
+      $('signin').addEventListener('click', () => A.signInWithPopup(auth, new A.GoogleAuthProvider()).catch(e => gate('Sign-in failed: ' + esc(e.code || e.message))));
+      return;
+    }
+    if (window.GAMES_ADMIN_UID && user.uid !== window.GAMES_ADMIN_UID) { gate(`This account is not the admin.<br>Its user id is <code>${esc(user.uid)}</code>.`); return; }
+    load(user);
+  });
+  async function load(user = auth.currentUser) {
+    if (!user) return;
+    gate('Loading plays…');
+    try {
+      const snap = await F.getDocs(F.query(F.collection(db, 'plays'), F.orderBy('ts', 'desc'), F.limit(10000)));
+      rows = snap.docs.map(d => { const v = d.data(); return { ...v, t: v.ts ? v.ts.toMillis() : Date.now() }; });
+      $('gate').hidden = true; $('dash').hidden = false; render();
+    } catch (e) {
+      gate(`The database refused to show the stats (${esc(e.code || e.message)}).<br><br>Your user id is <code>${esc(user.uid)}</code>. Put it in the Firestore rules (where it says ADMIN_UID) and in <code>GAMES_ADMIN_UID</code> in firebase-config.js.`);
+    }
+  }
+  function render() {
+    const days = +$('range').value, since = days ? Date.now() - days * 864e5 : 0;
+    const R = rows.filter(r => r.t >= since);
+    const players = new Set(R.map(r => r.pid)), wins = R.filter(r => r.result === 'win');
+    const secs = R.reduce((a, r) => a + r.secs, 0);
+    const today = new Set(rows.filter(r => r.t >= Date.now() - 864e5).map(r => r.pid)).size;
+    $('tiles').innerHTML = [
+      [players.size, 'Players'], [today, 'Players today'], [R.length, 'Level attempts'], [wins.length, 'Levels won'],
+      [pct(wins.length, R.length) + '%', 'Success rate'], [fmtTime(secs), 'Time played'], [players.size ? fmtTime(secs / players.size) : '0s', 'Time per player'],
+    ].map(([v, l]) => `<div class="tile"><b>${v}</b><span>${l}</span></div>`).join('');
+    const games = Object.keys(NAMES).map(id => {
+      const g = R.filter(r => r.game === id), gp = new Set(g.map(r => r.pid)), gw = g.filter(r => r.result === 'win');
+      const reached = {}; gw.forEach(r => { reached[r.pid] = Math.max(reached[r.pid] || 0, r.level + 1); });
+      const avgReach = gp.size ? Object.values(reached).reduce((a, b) => a + b, 0) / gp.size : 0;
+      const finished = Object.values(reached).filter(v => v >= (id === 'topple' ? 8 : 10)).length;
+      return { id, n: g.length, players: gp.size, wins: gw.length, quits: g.filter(r => r.result === 'quit').length, secs: g.reduce((a, r) => a + r.secs, 0), avgReach, finished };
+    }).sort((a, b) => b.secs - a.secs);
+    $('games').innerHTML = `<thead><tr><th>Game</th><th>Players</th><th>Attempts</th><th>Success</th><th>Quit</th><th>Time played</th><th>Time / player</th><th>Avg levels won</th><th>Finished all</th></tr></thead><tbody>` +
+      games.map(g => `<tr class="pick${pick === g.id ? ' on' : ''}" data-id="${g.id}"><td>${NAMES[g.id]}</td><td>${g.players}</td><td>${g.n}</td><td>${bar(pct(g.wins, g.n))}</td><td>${bar(pct(g.quits, g.n), 'var(--bad)')}</td><td>${fmtTime(g.secs)}</td><td>${g.players ? fmtTime(g.secs / g.players) : '–'}</td><td>${g.avgReach.toFixed(1)}</td><td>${g.finished}</td></tr>`).join('') + '</tbody>';
+    $('games').querySelectorAll('tr.pick').forEach(tr => tr.addEventListener('click', () => { pick = tr.dataset.id; render(); }));
+    if (!pick) pick = games[0].id;
+    const g = R.filter(r => r.game === pick), maxL = pick === 'topple' ? 8 : 10;
+    $('lvTitle').textContent = 'Levels of ' + NAMES[pick];
+    $('levels').innerHTML = `<thead><tr><th>Level</th><th>Players</th><th>Attempts</th><th>Success</th><th>Quit</th><th>Tries to win</th><th>Time to win</th><th>Time played</th></tr></thead><tbody>` +
+      Array.from({ length: maxL }, (_, l) => {
+        const L = g.filter(r => r.level === l), w = L.filter(r => r.result === 'win');
+        const avg = (arr, f) => (arr.length ? arr.reduce((a, r) => a + f(r), 0) / arr.length : 0);
+        return `<tr><td>${l + 1}</td><td>${new Set(L.map(r => r.pid)).size}</td><td>${L.length}</td><td>${bar(pct(w.length, L.length))}</td><td>${bar(pct(L.filter(r => r.result === 'quit').length, L.length), 'var(--bad)')}</td><td>${w.length ? avg(w, r => r.tries).toFixed(1) : '–'}</td><td>${w.length ? fmtTime(avg(w, r => r.secs)) : '–'}</td><td>${fmtTime(L.reduce((a, r) => a + r.secs, 0))}</td></tr>`;
+      }).join('') + '</tbody>';
+    $('recent').innerHTML = `<thead><tr><th>When</th><th>Player</th><th>Game</th><th>Level</th><th>Result</th><th>Time</th><th>Tries</th><th>Device</th></tr></thead><tbody>` +
+      R.slice(0, 40).map(r => `<tr><td>${new Date(r.t).toLocaleString()}</td><td>${esc(r.pid).slice(0, 6)}</td><td>${esc(NAMES[r.game] || r.game)}</td><td>${r.level + 1}</td><td style="color:${r.result === 'win' ? 'var(--good)' : r.result === 'lose' ? 'var(--bad)' : 'var(--muted)'}">${r.result}</td><td>${fmtTime(r.secs)}</td><td>${r.tries}</td><td>${esc(r.device)}</td></tr>`).join('') + '</tbody>';
+  }
+}
+</script>
+</body>
+</html>

@@ -1,0 +1,24 @@
+rules_version = '2';
+// Firestore rules for the games' play stats.
+// Anyone playing can add one "plays" record in the expected shape; nobody can change or delete records;
+// only the admin account can read them. Replace ADMIN_UID with your user id (shown on /games/admin/ after sign-in),
+// then paste this into Firebase console > Firestore Database > Rules and press Publish.
+service cloud.firestore {
+  match /databases/{database}/documents {
+    match /plays/{id} {
+      allow read: if request.auth != null && request.auth.uid == 'ADMIN_UID';
+      allow create: if request.resource.data.keys().hasOnly(['pid', 'device', 'game', 'level', 'result', 'secs', 'tries', 'stars', 'ts'])
+        && request.resource.data.keys().hasAll(['pid', 'device', 'game', 'level', 'result', 'secs', 'tries', 'stars', 'ts'])
+        && request.resource.data.pid is string && request.resource.data.pid.size() <= 24
+        && request.resource.data.device in ['phone', 'desktop']
+        && request.resource.data.game is string && request.resource.data.game.size() <= 19
+        && request.resource.data.level is int && request.resource.data.level >= 0 && request.resource.data.level < 20
+        && request.resource.data.result in ['win', 'lose', 'quit']
+        && request.resource.data.secs is int && request.resource.data.secs >= 0 && request.resource.data.secs < 7200
+        && request.resource.data.tries is int && request.resource.data.tries >= 1 && request.resource.data.tries < 1000
+        && request.resource.data.stars is int && request.resource.data.stars >= 0 && request.resource.data.stars <= 3
+        && request.resource.data.ts == request.time;
+      allow update, delete: if false;
+    }
+  }
+}
