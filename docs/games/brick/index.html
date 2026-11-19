@@ -1,0 +1,88 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<title>Brick Bash</title>
+<meta name="description" content="Bounce the ball with your paddle and break every brick.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Lilita+One&family=Nunito:wght@700;800;900&display=swap">
+<link rel="stylesheet" href="../kit/kit.css">
+</head>
+<body>
+<script src="../kit/firebase-config.js"></script>
+<script src="../kit/stats.js"></script>
+<script src="../kit/kit.js"></script>
+<script>
+const COLORS = ['#f0505e', '#ff9a3c', '#ffd54a', '#5acb74', '#4f8ef2', '#a06ee2'];
+const COLS = 8;
+// ball speed (board heights per second); bricks come from a pattern per level
+const SPEED = [0.55, 0.6, 0.64, 0.68, 0.72, 0.76, 0.8, 0.84, 0.88, 0.92];
+const PATTERNS = [
+  (x, y) => y < 3, (x, y) => y < 4 && (x + y) % 2 === 0, (x, y) => y < 5 && Math.abs(x - 3.5) < 4 - y * 0.5,
+  (x, y) => y < 5, (x, y) => y < 6 && (x === y || x === 7 - y || y === 0 || y === 5), (x, y) => y < 6 && (x + y) % 3 !== 0,
+  (x, y) => y < 6, (x, y) => y < 7 && (x % 2 === 0 || y % 2 === 0), (x, y) => y < 7, (x, y) => y < 8,
+];
+
+Kit.start({
+  id: 'brick', title: 'Brick Bash', accent: ['#f0505e', '#b02d3a'],
+  help: ['Drag left and right to move the paddle.', 'Bounce the ball to break every brick.', 'You have 3 balls. Some bricks take two hits.'],
+  tips: { 0: 'Drag to move the paddle' },
+  level(i, api) {
+    const R = api.rng;
+    const bricks = [];
+    for (let y = 0; y < 9; y++) for (let x = 0; x < COLS; x++) if (PATTERNS[i](x, y)) bricks.push({ x, y, hp: i >= 4 && R() < 0.12 + i * 0.02 ? 2 : 1, c: y % COLORS.length });
+    let W = 300, H = 500, bw = 30, bh = 14, pad = { x: 0.5, w: 0.24 }, ball = null, lives = 3, top = 40, hits = 0;
+    const C = api.canvas(o => { W = Math.min(o.w - 8, o.h * 0.7); H = o.h - 8; bw = W / COLS; bh = Math.max(12, Math.min(22, bw * 0.45)); top = 30; });
+    const OX = () => (C.w - W) / 2;
+    const reset = () => { ball = { x: pad.x, y: 0.86, vx: 0, vy: 0, stuck: true }; };
+    reset();
+    const hud = () => api.info(`<span class="chip">${'●'.repeat(lives)}<span style="opacity:.3">${'●'.repeat(3 - lives)}</span></span><span class="chip">Bricks: ${bricks.length}</span>`);
+    hud();
+    const launch = () => { if (ball.stuck) { const a = -Math.PI / 2 + (R() - 0.5) * 0.6; ball.vx = Math.cos(a) * SPEED[i]; ball.vy = Math.sin(a) * SPEED[i]; ball.stuck = false; api.snd.tap(); } };
+    C.cv.addEventListener('pointerdown', e => { C.cv.setPointerCapture(e.pointerId); const p = C.point(e); pad.x = Math.max(pad.w / 2, Math.min(1 - pad.w / 2, (p.x - OX()) / W)); });
+    C.cv.addEventListener('pointermove', e => { if (e.buttons || e.pointerType !== 'mouse') { const p = C.point(e); pad.x = Math.max(pad.w / 2, Math.min(1 - pad.w / 2, (p.x - OX()) / W)); } });
+    C.cv.addEventListener('pointerup', () => launch());
+    api.loop((dt) => {
+      if (!api.ended()) {
+        const steps = 4, aspect = H / W;
+        for (let s = 0; s < steps; s++) {
+          if (ball.stuck) { ball.x = pad.x; break; }
+          ball.x += ball.vx * dt / steps * aspect; ball.y += ball.vy * dt / steps;
+          const r = 7 / H, rx = 7 / W;
+          if (ball.x < rx) { ball.x = rx; ball.vx = Math.abs(ball.vx); }
+          if (ball.x > 1 - rx) { ball.x = 1 - rx; ball.vx = -Math.abs(ball.vx); }
+          if (ball.y < top / H + r) { ball.y = top / H + r; ball.vy = Math.abs(ball.vy); }
+          if (ball.vy > 0 && ball.y > 0.9 - r && ball.y < 0.93 && Math.abs(ball.x - pad.x) < pad.w / 2 + rx) {
+            const off = (ball.x - pad.x) / (pad.w / 2), a = -Math.PI / 2 + off * 1.0, sp = Math.hypot(ball.vx, ball.vy);
+            ball.vx = Math.cos(a) * sp; ball.vy = Math.sin(a) * sp; api.snd.tick();
+          }
+          for (let k = 0; k < bricks.length; k++) {
+            const b = bricks[k], bx0 = b.x / COLS, bx1 = (b.x + 1) / COLS, by0 = (top + b.y * bh) / H, by1 = (top + (b.y + 1) * bh) / H;
+            if (ball.x + rx > bx0 && ball.x - rx < bx1 && ball.y + r > by0 && ball.y - r < by1) {
+              const ox2 = Math.min(ball.x + rx - bx0, bx1 - ball.x + rx) / rx, oy2 = Math.min(ball.y + r - by0, by1 - ball.y + r) / r;
+              if (ox2 < oy2) ball.vx = -ball.vx; else ball.vy = -ball.vy;
+              b.hp--; hits++;
+              if (b.hp <= 0) { bricks.splice(k, 1); api.snd.pop(hits % 14); api.vib(5); hud(); if (!bricks.length) { api.win(); return; } }
+              else api.snd.tap();
+              break;
+            }
+          }
+          if (ball.y > 1.02) { lives--; hud(); api.snd.bad(); api.vib(40); if (lives <= 0) { api.lose('Out of balls', `${bricks.length} bricks left. Hit the ball with the paddle's edge to aim it.`); return; } reset(); break; }
+        }
+      }
+      const { ctx } = C; C.clear();
+      const ox = OX();
+      ctx.fillStyle = 'rgba(255,255,255,.04)'; ctx.fillRect(ox, top - 4, W, H - top);
+      bricks.forEach(b => { ctx.fillStyle = COLORS[b.c]; api.rr(ctx, ox + b.x * bw + 2, top + b.y * bh + 2, bw - 4, bh - 4, 4); ctx.fill(); if (b.hp > 1) { ctx.strokeStyle = '#fff'; ctx.lineWidth = 2; ctx.stroke(); } });
+      ctx.fillStyle = '#c9d6ff'; api.rr(ctx, ox + (pad.x - pad.w / 2) * W, 0.9 * H, pad.w * W, 12, 6); ctx.fill();
+      ctx.beginPath(); ctx.arc(ox + ball.x * W, ball.y * H, 7, 0, 7); ctx.fillStyle = '#fff'; ctx.fill();
+      if (ball.stuck && !api.ended()) { ctx.fillStyle = 'rgba(255,255,255,.7)'; ctx.font = '800 15px Nunito, sans-serif'; ctx.textAlign = 'center'; ctx.fillText('Tap to launch', ox + W / 2, 0.8 * H); }
+    });
+  },
+});
+
+</script>
+</body>
+</html>

@@ -63,7 +63,8 @@ tr.pick:hover td, tr.on td { background: rgba(87,108,188,.18); }
 <script type="module">
 const SDK = 'https://www.gstatic.com/firebasejs/10.12.2/';
 const NAMES = { noodle: 'Noodle Out', tilt: 'Tilt Sort', flood: 'Flood Rescue', rail: 'Switch Rail', gate: 'Gate Drop', mix: 'Mix Lab', blast: 'Blast Cascade', tower: 'Pull Tower', sand: 'Sand Jars', mosaic: 'Mosaic', topple: 'Topple',
-  pipes: 'Pipe Spin', floodit: 'Color Flood', lights: 'Lights Off', merge: 'Merge Drop', tubes: 'Tube Sort', pop: 'Pop Groups', stack: 'Stack Up', slide: 'Slide Puzzle', stroke: 'One Stroke' };
+  pipes: 'Pipe Spin', floodit: 'Color Flood', lights: 'Lights Off', merge: 'Merge Drop', tubes: 'Tube Sort', pop: 'Pop Groups', stack: 'Stack Up', slide: 'Slide Puzzle', stroke: 'One Stroke',
+  dots: 'Dot Link', nono: 'Picture Logic', mines: 'Safe Steps', snake: 'Snake Bites', echo: 'Echo', sudoku: 'Mini Sudoku', swipe: 'Number Swipe', brick: 'Brick Bash', gems: 'Gem Swap', tap: 'Tap Rush' };
 const $ = id => document.getElementById(id);
 const cfg = window.GAMES_FIREBASE;
 const gate = html => { $('gate').hidden = false; $('gate').innerHTML = html; $('dash').hidden = true; };
