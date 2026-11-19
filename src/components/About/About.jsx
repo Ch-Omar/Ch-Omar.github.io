@@ -8,35 +8,35 @@ export const About = () => {
     <section className={styles.container} id="about">
       <h2 className={styles.title}>About</h2>
       <div className={styles.content}>
-        <img className={styles.aboutImg} src={getImageUrl("about/aboutImage.png")} alt="About image" />
-        <ul  className={styles.aboutItems}>
+        <img className={styles.aboutImg} src={getImageUrl("about/aboutImage.png")} alt="" />
+        <ul className={styles.aboutItems}>
           <li className={styles.aboutItem}>
-            <img className={styles.iconImg} src={getImageUrl("about/cursorIcon.png")} />
-            <div  className={styles.aboutItemText}>
-              <h3>Frontend Developer</h3>
+            <img className={styles.iconImg} src={getImageUrl("about/cursorIcon.png")} alt="" />
+            <div className={styles.aboutItemText}>
+              <h3>Front-end Developer</h3>
               <p>
-                I&apos;m a front-end developer with experience in building
-                responsive and optimized sites
+                8+ years building responsive, fast web apps with React and Next.js,
+                from small business sites to a full healthcare platform.
               </p>
             </div>
           </li>
           <li className={styles.aboutItem}>
-            <img className={styles.iconImg} src={getImageUrl("about/serverIcon.png")} />
+            <img className={styles.iconImg} src={getImageUrl("about/uiIcon.png")} alt="" />
             <div className={styles.aboutItemText}>
-              <h3>Backend Developer</h3>
+              <h3>Mobile Developer</h3>
               <p>
-                I have experience developing fast and optimized back-end systems
-                and APIs
+                React Native apps for Android and iOS, and my own Unity puzzle
+                game, PaintDrop.
               </p>
             </div>
           </li>
           <li className={styles.aboutItem}>
-            <img className={styles.iconImg} src={getImageUrl("about/uiIcon.png")} />
+            <img className={styles.iconImg} src={getImageUrl("about/serverIcon.png")} alt="" />
             <div className={styles.aboutItemText}>
-              <h3>UI Designer</h3>
+              <h3>APIs &amp; Back-end</h3>
               <p>
-                I hce designed multiple landing pages and have created design
-                systems as well
+                Node.js and Meteor.js with MongoDB, WordPress REST APIs, Symfony
+                API integration, secure payments and Firebase.
               </p>
             </div>
           </li>

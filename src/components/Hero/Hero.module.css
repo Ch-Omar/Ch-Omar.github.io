@@ -33,10 +33,64 @@
     -webkit-background-clip: text;
 }
 
+.kicker{
+    font-size: 18px;
+    letter-spacing: 1.5px;
+    text-transform: uppercase;
+    color: #a9b7da;
+    margin-bottom: 12px;
+}
+
 .description{
-    font-size: 30px;
+    font-size: 26px;
     font-family: var(--font-roboto);
-    margin-bottom: 52px;
+    margin-bottom: 32px;
+    max-width: 30ch;
+}
+
+.stats{
+    list-style: none;
+    display: flex;
+    flex-wrap: wrap;
+    gap: 14px;
+    margin-bottom: 40px;
+}
+
+.stats li{
+    background: rgba(87, 108, 188, 0.18);
+    border: 1px solid rgba(255, 255, 255, 0.12);
+    border-radius: 14px;
+    padding: 12px 18px;
+    display: flex;
+    flex-direction: column;
+    gap: 2px;
+}
+
+.stats b{
+    font-size: 28px;
+    font-weight: 700;
+}
+
+.stats span{
+    font-size: 15px;
+    color: #a9b7da;
+}
+
+.actions{
+    display: flex;
+    flex-wrap: wrap;
+    gap: 16px;
+    align-items: center;
+}
+
+.secondaryBtn{
+    text-decoration: none;
+    color: var(--color-text);
+    border: 2px solid var(--color-primary);
+    border-radius: 100px;
+    font-size: 24px;
+    font-weight: 600;
+    padding: 13px 24px;
 }
 
 .contactBtn{
@@ -109,5 +163,22 @@
 
     .content {
         align-items: center;
+        text-align: center;
+    }
+
+    .title{
+        font-size: 52px;
+    }
+
+    .description{
+        font-size: 21px;
+    }
+
+    .stats, .actions{
+        justify-content: center;
+    }
+
+    .contactBtn, .secondaryBtn{
+        font-size: 20px;
     }
 }

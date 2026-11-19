@@ -1,26 +1,42 @@
 [
-    {
-      "title": "Project A",
-      "imageSrc": "projects/project.png",
-      "description": "This is a project made to learn the latest languages by building an app.",
-      "skills": ["React", "Express", "Node"],
-      "demo": "https://www.example.com",
-      "source": "https://www.github.com"
-    },
-    {
-      "title": "Project B",
-      "imageSrc": "projects/project.png",
-      "description": "This is a project made to learn the latest languages by building an app.",
-      "skills": ["React", "Express", "Node", "Sass"],
-      "demo": "https://www.example.com",
-      "source": "https://www.github.com"
-    },
-    {
-      "title": "Project C",
-      "imageSrc": "projects/project.png",
-      "description": "This is a project made to learn the latest languages by building an app.",
-      "skills": ["React", "Express", "Node"],
-      "demo": "https://www.example.com",
-      "source": "https://www.github.com"
-    }
-  ]
+  {
+    "title": "Healthcare platform",
+    "label": "Web · ImpactDev",
+    "color": "#2e9e8f",
+    "description": "Next.js platform to manage health facilities, professionals and patients, connected to a Symfony API.",
+    "skills": ["Next.js", "React", "REST API"]
+  },
+  {
+    "title": "Health news app",
+    "label": "Mobile · ImpactDev",
+    "color": "#4f8ef2",
+    "description": "React Native app for health publications, with the WordPress REST API that feeds it.",
+    "skills": ["React Native", "WordPress", "REST API"]
+  },
+  {
+    "title": "Ed-tech for entrepreneurs",
+    "label": "Web · PerfectSoft",
+    "color": "#a06ee2",
+    "description": "Platform that helps entrepreneurs grow their business, with secure payments and live data sync.",
+    "skills": ["Meteor.js", "MongoDB", "Bootstrap"]
+  },
+  {
+    "title": "PaintDrop",
+    "label": "Mobile game · personal",
+    "color": "#f0505e",
+    "description": "Puzzle game for Android: send paint buckets to fill a pixel picture. 35 levels made by my own generator and solver.",
+    "skills": ["Unity", "C#", "Python"],
+    "demo": "https://ch-omar.github.io/paintdrop/privacy.html",
+    "demoLabel": "Privacy page"
+  },
+  {
+    "title": "Games lab",
+    "label": "Web · personal",
+    "color": "#ffc83d",
+    "description": "30 browser puzzle prototypes with 10 levels each, anonymous play stats, ratings and an admin dashboard.",
+    "skills": ["JavaScript", "Canvas", "Firebase"],
+    "demo": "/games/",
+    "demoLabel": "Play",
+    "source": "https://github.com/Ch-Omar/Ch-Omar.github.io"
+  }
+]

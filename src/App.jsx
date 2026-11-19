@@ -5,6 +5,7 @@ import { Navbar } from "./components/Navbar/Navbar";
 import { Experience } from "./components/Experience/Experience";
 import { Contact } from "./components/Contact/Contact";
 import { Projects } from "./components/Projects/Projects";
+import { Education } from "./components/Education/Education";
 
 function App() {
   return <div className={styles.App}>
@@ -13,6 +14,7 @@ function App() {
     <About />
     <Experience />
     <Projects />
+    <Education />
     <Contact />
   </div>;
 }

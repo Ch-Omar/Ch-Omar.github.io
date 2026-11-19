@@ -1,29 +1,67 @@
 [
-    {
-      "role": "Software Engineer",
-      "organization": "Google",
-      "startDate": "Sept, 2022",
-      "endDate": "Present",
-      "experiences": ["Worked on Google Maps", "Reduced load times by 50%"],
-      "imageSrc": "history/google.png"
-    },
-    {
-      "role": "UI Designer",
-      "organization": "Microsoft",
-      "startDate": "Aug, 2021",
-      "endDate": "Aug, 2022",
-      "experiences": ["Worked on Windows 11", "Designed the control panel"],
-      "imageSrc": "history/microsoft.png"
-    },
-    {
-      "role": "SWE Intern",
-      "organization": "Netflix",
-      "startDate": "Apr, 2020",
-      "endDate": "Jun, 2020",
-      "experiences": [
-        "Worked on component library",
-        "Helped create UI components"
-      ],
-      "imageSrc": "history/netflix.png"
-    }
-  ]
+  {
+    "role": "Senior Front-end & Mobile Developer",
+    "organization": "ImpactDev",
+    "place": "Sfax",
+    "startDate": "Dec 2024",
+    "endDate": "Present",
+    "experiences": [
+      "Built a healthcare web platform with Next.js: facilities, health professionals and patients",
+      "Integrated the Symfony API built by another team",
+      "Built a React Native app for health publications, fed by a WordPress REST API I designed",
+      "Documented the project and its best practices in Markdown"
+    ],
+    "tech": ["Next.js", "React Native", "React", "WordPress REST", "GitLab", "Redmine"]
+  },
+  {
+    "role": "Full Stack Developer",
+    "organization": "PerfectSoft",
+    "place": "Sfax",
+    "startDate": "Apr 2023",
+    "endDate": "Sep 2024",
+    "experiences": [
+      "Built an ed-tech website that helps entrepreneurs grow their business",
+      "Managed large amounts of data for fast storage and retrieval",
+      "Secured the site and user payments",
+      "Synced client and server data for a smoother experience"
+    ],
+    "tech": ["Meteor.js", "MongoDB", "JavaScript", "Bootstrap"]
+  },
+  {
+    "role": "Front-end Developer",
+    "organization": "Oxton Digital",
+    "place": "Tunis",
+    "startDate": "Mar 2022",
+    "endDate": "Jan 2023",
+    "experiences": [
+      "Built React websites for small businesses",
+      "Improved responsiveness and performance",
+      "Worked in Agile sprints with the clients"
+    ],
+    "tech": ["React", "JavaScript", "jQuery", "Bootstrap", "Git"]
+  },
+  {
+    "role": "Administration & Organisation",
+    "organization": "Digidiom",
+    "place": "Sfax",
+    "startDate": "Feb 2021",
+    "endDate": "Feb 2022",
+    "experiences": [
+      "Built the Digidiom e-commerce site with PrestaShop",
+      "Set up a platform to keep the team agile: tasks, calendar, leave"
+    ],
+    "tech": ["PrestaShop", "Odoo", "Git"]
+  },
+  {
+    "role": "Developer",
+    "organization": "Multimedia & IT development company",
+    "place": "Sfax",
+    "startDate": "Nov 2019",
+    "endDate": "Mar 2020",
+    "experiences": [
+      "Built dynamic web applications with CakePHP and PHP",
+      "Integrated and managed the projects' databases"
+    ],
+    "tech": ["CakePHP", "PHP", "SQL"]
+  }
+]

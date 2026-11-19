@@ -1,30 +1,7 @@
 [
-    {
-      "title": "HTML",
-      "imageSrc": "skills/html.png"
-    },
-    {
-      "title": "CSS",
-      "imageSrc": "skills/css.png"
-    },
-    {
-      "title": "React",
-      "imageSrc": "skills/react.png"
-    },
-    {
-      "title": "Node",
-      "imageSrc": "skills/node.png"
-    },
-    {
-      "title": "GraphQL",
-      "imageSrc": "skills/graphql.png"
-    },
-    {
-      "title": "MongoDB",
-      "imageSrc": "skills/mongodb.png"
-    },
-    {
-      "title": "Figma",
-      "imageSrc": "skills/figma.png"
-    }
-  ]
+  { "group": "Frameworks", "items": ["React", "Next.js", "React Native", "Redux", "Node.js", "Meteor.js"] },
+  { "group": "Languages & web", "items": ["JavaScript", "HTML", "CSS", "Bootstrap", "jQuery", "PHP", "REST APIs"] },
+  { "group": "Databases", "items": ["MongoDB", "SQL", "Firebase"] },
+  { "group": "Tools & platforms", "items": ["Git", "GitLab", "Redmine", "WordPress", "PrestaShop", "Odoo", "Unity"] },
+  { "group": "Systems & methods", "items": ["Linux (Ubuntu)", "Shell", "Agile"] }
+]

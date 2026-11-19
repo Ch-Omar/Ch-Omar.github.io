@@ -1,0 +1,12 @@
+{
+  "education": [
+    { "title": "Full-stack web development bootcamp", "school": "GoMyCode", "date": "Jun – Sep 2019", "place": "Tunis", "note": "HTML5, CSS3, JavaScript, React, Redux, MongoDB" },
+    { "title": "Higher technician diploma in multimedia & web", "school": "Higher Institute of Computer Science and Multimedia of Sfax", "date": "2015", "place": "Sfax" },
+    { "title": "Baccalaureate in computer science", "school": "Lycée Mongi Slim", "date": "2011", "place": "Sfax" }
+  ],
+  "languages": [
+    { "name": "Arabic", "level": "Fluent" },
+    { "name": "English", "level": "Intermediate" },
+    { "name": "French", "level": "Intermediate" }
+  ]
+}
